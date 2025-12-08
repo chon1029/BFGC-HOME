@@ -1,0 +1,18 @@
+# 중요: 필수 제외 폴더/파일
+/node_modules
+/.next
+
+# 빌드 및 로깅 관련
+/out
+/dist
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn
+
+# 환경 변수 및 기타 민감 정보
+.env
+.env.local
+.env.development.local
+.env.production.local

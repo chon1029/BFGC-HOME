@@ -68,7 +68,7 @@ export default function NewcomerSection() {
                         transition={{ duration: 0.6 }}
                         className="lg:w-1/3 space-y-6 text-center lg:text-left" // 불필요한 pl 제거
                     >
-                        <h2 className="text-3xl md:text-4xl font-bold text-black tracking-tight">
+                        <h2 className="text-3xl md:text-4xl font-bold text-black tracking-tight drop-shadow-[2px_2px_3px_rgba(0,0,0,0.8)]">
                             처음오셨나요?
                         </h2>
 
@@ -81,7 +81,7 @@ export default function NewcomerSection() {
                         <Button
                             asChild
                             size="lg"
-                            className="bg-gradient-to-r from-sky-500 to-violet-500 hover:brightness-110 text-white text-lg px-8 py-6 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 group border-0"
+                            className="bg-gradient-to-r from-sky-500 to-violet-500 hover:brightness-110 text-white text-lg px-8 py-6 rounded-md drop-shadow-[2px_2px_4px_rgba(0,0,0,0.8)] hover:shadow-xl transition-all duration-300 group border-0"
                         >
                             <Link href="/newcomer/guide" className="flex items-center gap-2">
                                 새가족 안내 자세히 보기

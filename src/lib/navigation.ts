@@ -19,119 +19,102 @@ export const mainNavigation: NavItem[] = [
     href: '/',
   },
   {
-    label: '교회소개',
-    href: '/about',
+    label: '교회안내',
+    href: '/guide',
     children: [
       {
-        label: '인사말',
-        href: '/about/greeting',
+        label: '인사말씀',
+        href: '/guide/greeting',
         description: '담임목사 인사말',
       },
       {
-        label: '교회연혁',
-        href: '/about/history',
-        description: '교회의 역사와 발자취',
+        label: '교회비전',
+        href: '/guide/vision',
+        description: '교회의 비전과 사명',
       },
       {
-        label: '섬기는 사람들',
-        href: '/about/staff',
-        description: '목회자 및 교역자 소개',
+        label: '새가족등록안내',
+        href: '/guide/newcomer',
+        description: '새가족 등록 및 안내',
       },
       {
-        label: '찾아오시는 길',
-        href: '/about/location',
+        label: '예배시간안내',
+        href: '/guide/schedule',
+        description: '주일예배 및 각종 예배 시간',
+      },
+      {
+        label: '교회오시는길',
+        href: '/guide/location',
         description: '교회 위치 및 교통편',
       },
     ],
   },
   {
-    label: '예배',
+    label: '예배•양육',
     href: '/worship',
     children: [
       {
-        label: '예배시간',
-        href: '/worship/schedule',
-        description: '주일예배 및 각종 예배 시간',
-      },
-      {
-        label: '설교말씀',
+        label: '주일설교',
         href: '/worship/sermons',
         description: '주일 설교 및 말씀 자료',
       },
       {
-        label: '온라인 예배',
-        href: '/worship/online',
-        description: '실시간 온라인 예배',
-      },
-    ],
-  },
-  {
-    label: '사역',
-    href: '/ministry',
-    children: [
-      {
-        label: '선교',
-        href: '/ministry/mission',
-        description: '국내외 선교 사역',
+        label: '일용할양식',
+        href: '/worship/daily-bread',
+        description: '매일 묵상 자료',
       },
       {
-        label: '양육',
-        href: '/ministry/discipleship',
+        label: '제자훈련',
+        href: '/worship/discipleship',
         description: '성도 양육 프로그램',
       },
-      {
-        label: '치유',
-        href: '/ministry/healing',
-        description: '치유 및 회복 사역',
-      },
-      {
-        label: '다음세대',
-        href: '/ministry/next-generation',
-        description: '어린이·청소년 사역',
-      },
     ],
   },
   {
-    label: '공동체',
-    href: '/community',
+    label: '다음세대',
+    href: '/next-generation',
     children: [
       {
-        label: '교제',
-        href: '/community/fellowship',
-        description: '구역·소그룹 모임',
+        label: '킹스키즈',
+        href: '/next-generation/kings-kids',
+        description: '어린이 사역',
       },
       {
-        label: '새가족',
-        href: '/community/newcomer',
-        description: '새가족 등록 및 안내',
+        label: '샘스쿨',
+        href: '/next-generation/sam-school',
+        description: '중고등부 사역',
       },
       {
-        label: '갤러리',
-        href: '/community/gallery',
-        description: '교회 사진 및 영상',
+        label: '여호수아 청년부',
+        href: '/next-generation/joshua',
+        description: '청년 사역',
       },
     ],
   },
   {
-    label: '알림',
-    href: '/notice',
+    label: '교회생활',
+    href: '/life',
     children: [
       {
         label: '주보',
-        href: '/notice/bulletin',
+        href: '/life/bulletin',
         description: '주간 교회 소식',
       },
       {
-        label: '일정',
-        href: '/notice/calendar',
-        description: '교회 행사 일정',
+        label: '사진게시판',
+        href: '/life/gallery',
+        description: '교회 사진 및 영상',
       },
       {
-        label: '매일성경',
-        href: '/notice/daily-bread',
-        description: '매일 묵상 자료',
+        label: '주간기도문',
+        href: '/life/prayer',
+        description: '이 땅을 새롭게 하는 기도',
       },
     ],
+  },
+  {
+    label: 'Contact',
+    href: '/contact',
   },
 ]
 
@@ -139,24 +122,23 @@ export const mainNavigation: NavItem[] = [
  * 푸터 네비게이션 메뉴 데이터
  */
 export const footerNavigation = {
-  about: [
-    { label: '교회소개', href: '/about' },
-    { label: '인사말', href: '/about/greeting' },
-    { label: '찾아오시는 길', href: '/about/location' },
+  guide: [
+    { label: '교회안내', href: '/guide' },
+    { label: '인사말씀', href: '/guide/greeting' },
+    { label: '교회오시는길', href: '/guide/location' },
   ],
   worship: [
-    { label: '예배시간', href: '/worship/schedule' },
-    { label: '설교말씀', href: '/worship/sermons' },
-    { label: '온라인예배', href: '/worship/online' },
+    { label: '예배시간안내', href: '/guide/schedule' },
+    { label: '주일설교', href: '/worship/sermons' },
+    { label: '일용할양식', href: '/worship/daily-bread' },
   ],
-  community: [
-    { label: '새가족', href: '/community/newcomer' },
-    { label: '교제', href: '/community/fellowship' },
-    { label: '갤러리', href: '/community/gallery' },
+  life: [
+    { label: '새가족등록안내', href: '/guide/newcomer' },
+    { label: '주보', href: '/life/bulletin' },
+    { label: '사진게시판', href: '/life/gallery' },
   ],
-  notice: [
-    { label: '주보', href: '/notice/bulletin' },
-    { label: '일정', href: '/notice/calendar' },
+  contact: [
+    { label: 'Contact', href: '/contact' },
   ],
 }
 
@@ -187,17 +169,17 @@ export const socialLinks = [
 export const quickLinks = [
   {
     label: '예배 시간 안내',
-    href: '/worship/schedule',
+    href: '/guide/schedule',
     variant: 'default' as const,
   },
   {
     label: '새가족 등록',
-    href: '/community/newcomer',
+    href: '/guide/newcomer',
     variant: 'secondary' as const,
   },
   {
-    label: '온라인 예배',
-    href: '/worship/online',
+    label: '주일 설교',
+    href: '/worship/sermons',
     variant: 'outline' as const,
   },
 ]

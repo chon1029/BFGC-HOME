@@ -9,12 +9,15 @@ import { mainNavigation } from '@/lib/navigation'
 import { cn } from '@/lib/utils'
 
 /**
- * Header 컴포넌트 (Always White Edition)
- * - 배경: 초기 투명 -> 스크롤 시 블랙/오로라
- * - 텍스트/로고: 항상 화이트 (영상 배경 가독성 확보)
- * - 로그인 버튼: 항상 화이트 + 그라데이션 보더
+ * Header 컴포넌트
+ * - transparent: PageHeader 위에 투명하게 오버레이 (컬러 로고 + 검정 텍스트)
+ * - 기본: 홈페이지용 (화이트 로고 + 화이트 텍스트)
  */
-export default function Header() {
+interface HeaderProps {
+  transparent?: boolean
+}
+
+export default function Header({ transparent = false }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [scrolled, setScrolled] = useState(false)
@@ -39,13 +42,15 @@ export default function Header() {
       transition={{ duration: 0.5, ease: 'easeOut' }}
       className={cn(
         'fixed top-0 z-[100] w-full transition-all duration-500',
-        scrolled
-          ? 'bg-black/90 backdrop-blur-md border-b border-white/10 shadow-lg py-2'
-          : 'bg-transparent border-b border-transparent py-4'
+        transparent
+          ? 'bg-transparent border-b border-transparent py-4'
+          : scrolled
+            ? 'bg-black/90 backdrop-blur-md border-b border-white/10 shadow-lg py-2'
+            : 'bg-transparent border-b border-transparent py-4'
       )}
     >
       <div className="container flex items-center justify-between px-4 md:px-6">
-        {/* 로고 (항상 화이트) */}
+        {/* 로고 */}
         <Link href="/" className="flex items-center group" onClick={closeMobileMenu}>
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -56,7 +61,10 @@ export default function Header() {
               src="/images/logo/main-logo.png"
               alt="부다페스트한인선교교회 로고"
               fill
-              className="object-contain transition-all duration-500 brightness-0 invert"
+              className={cn(
+                "object-contain transition-all duration-500",
+                transparent ? "" : "brightness-0 invert"
+              )}
               priority
             />
           </motion.div>
@@ -73,17 +81,26 @@ export default function Header() {
             >
               <Link
                 href={item.href}
-                className="relative flex items-center py-2 text-lg font-bold transition-all duration-500 text-white/90 hover:text-white"
+                className={cn(
+                  "relative flex items-center py-2 text-lg font-bold transition-all duration-500",
+                  transparent ? "text-slate-900 hover:text-slate-700" : "text-white/90 hover:text-white"
+                )}
               >
                 {/* 텍스트 내용 */}
-                <span className="relative z-10 transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-sky-400 group-hover:to-violet-400">
+                <span className={cn(
+                  "relative z-10 transition-all duration-300",
+                  transparent
+                    ? "group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-sky-600 group-hover:to-violet-600"
+                    : "group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-sky-400 group-hover:to-violet-400"
+                )}>
                   {item.label}
                 </span>
 
                 {item.children && (
                   <ChevronDown
                     className={cn(
-                      'ml-1 h-4 w-4 transition-transform duration-300 text-white/70 group-hover:text-violet-300',
+                      'ml-1 h-4 w-4 transition-transform duration-300',
+                      transparent ? 'text-slate-600 group-hover:text-violet-600' : 'text-white/70 group-hover:text-violet-300',
                       activeDropdown === item.label && 'rotate-180'
                     )}
                   />

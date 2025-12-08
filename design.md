@@ -27,47 +27,70 @@
 
 ### 브랜드 컬러
 
-#### Primary (주 색상) - 보라/남색
+#### Sky Blue (스카이 블루) - 생동감, 희망, 투명함
 ```css
---primary-50: #f0efff;
---primary-100: #e0deff;
---primary-200: #c7c3ff;
---primary-300: #a39eff;
---primary-400: #7b70ff;
---primary-500: #0c076d;  /* 메인 */
---primary-600: #090555;
---primary-700: #06033d;
---primary-800: #040228;
---primary-900: #02011a;
+--sky-50: #f0f9ff;
+--sky-100: #e0f2fe;
+--sky-200: #bae6fd;
+--sky-300: #7dd3fc;
+--sky-400: #38bdf8;    /* 메인 */
+--sky-500: #0ea5e9;
+--sky-600: #0284c7;
+--sky-700: #0369a1;
+--sky-800: #075985;
+--sky-900: #0c4a6e;
 ```
 
 **사용 예시**:
-- 헤더 배경
-- 주요 버튼
-- 링크 텍스트
-- 아이콘 강조
-- 섹션 배경 (연한 톤)
-
-#### Accent (강조 색상) - 오렌지
-```css
---accent-50: #fff5f0;
---accent-100: #ffe8dc;
---accent-200: #ffd4c3;
---accent-300: #ffb89a;
---accent-400: #ff9466;
---accent-500: #fb5800;  /* 메인 */
---accent-600: #c84600;
---accent-700: #953400;
---accent-800: #632300;
---accent-900: #3e1600;
-```
-
-**사용 예시**:
-- CTA 버튼
-- 중요한 알림
+- 그라데이션 시작점
+- 밝은 배경 강조
 - 호버 효과
-- 강조 텍스트
 - 아이콘 포인트
+- 정보 전달 요소
+
+#### Purple (퍼플) - 영성, 신비, 고귀함
+```css
+--purple-50: #faf5ff;
+--purple-100: #f3e8ff;
+--purple-200: #e9d5ff;
+--purple-300: #d8b4fe;
+--purple-400: #c084fc;
+--purple-500: #a855f7;  /* 메인 */
+--purple-600: #9333ea;
+--purple-700: #7e22ce;
+--purple-800: #6b21a8;
+--purple-900: #581c87;
+```
+
+**사용 예시**:
+- 그라데이션 끝점
+- 주요 버튼
+- 헤더 배경
+- 링크 텍스트
+- 섹션 강조
+
+#### Gradient (그라데이션) - 교회 정체성의 핵심
+```css
+/* 수평 그라데이션 (왼쪽→오른쪽) */
+--gradient-horizontal: linear-gradient(to right, #38bdf8, #a855f7);
+
+/* 수직 그라데이션 (위→아래) */
+--gradient-vertical: linear-gradient(to bottom, #38bdf8, #a855f7);
+
+/* 대각선 그라데이션 */
+--gradient-diagonal: linear-gradient(135deg, #38bdf8, #a855f7);
+
+/* 부드러운 그라데이션 (3색 블렌딩) */
+--gradient-smooth: linear-gradient(to right, #38bdf8, #818cf8, #a855f7);
+```
+
+**사용 예시**:
+- 페이지 타이틀 텍스트
+- 히어로 섹션 배경
+- CTA 버튼
+- 구분선 및 보더
+- 강조 배지
+- 로고 및 브랜드 요소
 
 ### Neutral (중성 색상)
 ```css
@@ -120,32 +143,38 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#f0efff',
-          100: '#e0deff',
-          200: '#c7c3ff',
-          300: '#a39eff',
-          400: '#7b70ff',
-          500: '#0c076d',
-          600: '#090555',
-          700: '#06033d',
-          800: '#040228',
-          900: '#02011a',
-          DEFAULT: '#0c076d',
+        sky: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+          DEFAULT: '#38bdf8',
         },
-        accent: {
-          50: '#fff5f0',
-          100: '#ffe8dc',
-          200: '#ffd4c3',
-          300: '#ffb89a',
-          400: '#ff9466',
-          500: '#fb5800',
-          600: '#c84600',
-          700: '#953400',
-          800: '#632300',
-          900: '#3e1600',
-          DEFAULT: '#fb5800',
+        purple: {
+          50: '#faf5ff',
+          100: '#f3e8ff',
+          200: '#e9d5ff',
+          300: '#d8b4fe',
+          400: '#c084fc',
+          500: '#a855f7',
+          600: '#9333ea',
+          700: '#7e22ce',
+          800: '#6b21a8',
+          900: '#581c87',
+          DEFAULT: '#a855f7',
         },
+      },
+      backgroundImage: {
+        'gradient-sky-purple': 'linear-gradient(to right, #38bdf8, #a855f7)',
+        'gradient-sky-purple-vertical': 'linear-gradient(to bottom, #38bdf8, #a855f7)',
+        'gradient-sky-purple-diagonal': 'linear-gradient(135deg, #38bdf8, #a855f7)',
+        'gradient-sky-purple-smooth': 'linear-gradient(to right, #38bdf8, #818cf8, #a855f7)',
       },
     },
   },
@@ -158,7 +187,7 @@ export default {
 
 ### 폰트 패밀리
 
-#### 메인 폰트: SC Dream (에스코어 드림)
+#### 메인 폰트: SC Dream (에스코어 드림) - 유일한 공식 폰트
 ```css
 @font-face {
   font-family: 'SC Dream';
@@ -166,19 +195,79 @@ export default {
   font-weight: 100;
   font-display: swap;
 }
-/* ... 200~900 반복 */
+
+@font-face {
+  font-family: 'SC Dream';
+  src: url('/fonts/SCDream2.woff2') format('woff2');
+  font-weight: 200;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SC Dream';
+  src: url('/fonts/SCDream3.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SC Dream';
+  src: url('/fonts/SCDream4.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SC Dream';
+  src: url('/fonts/SCDream5.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SC Dream';
+  src: url('/fonts/SCDream6.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SC Dream';
+  src: url('/fonts/SCDream7.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SC Dream';
+  src: url('/fonts/SCDream8.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SC Dream';
+  src: url('/fonts/SCDream9.woff2') format('woff2');
+  font-weight: 900;
+  font-display: swap;
+}
 ```
 
 **특징**:
+- **유일한 공식 폰트**: 모든 텍스트에 SC Dream 사용
 - 한글 전용 폰트
 - 9가지 웨이트 (100, 200, 300, 400, 500, 600, 700, 800, 900)
 - 깔끔하고 현대적인 느낌
 
-#### 폴백 폰트
+#### 폴백 폰트 (SC Dream 로드 실패 시에만)
 ```css
-font-family: 'SC Dream', 'Noto Sans KR', -apple-system, BlinkMacSystemFont,
-             'Segoe UI', sans-serif;
+font-family: 'SC Dream', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 ```
+
+**중요**:
+- ✅ **모든 곳에서 SC Dream 사용**
+- ❌ Noto Sans KR, 다른 폰트 사용 금지
+- ✅ 시스템 폰트는 폴백용으로만
 
 ### 폰트 스케일
 

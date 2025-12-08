@@ -69,8 +69,8 @@ export default function ServiceInfoSection() {
                             whileInView={{ opacity: 1, y: 0, scale: 1 }}
                             viewport={{ once: false, margin: "-10%" }}
                             transition={{ duration: 0.5, delay: 0.2 }}
-                            className="text-4xl md:text-5xl font-bold text-black tracking-tight drop-shadow-2xl"
-                            style={{ textShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
+                            className="text-4xl md:text-5xl font-bold text-black tracking-tight drop-shadow-xl"
+                            style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.6)' }}
                         >
                             부다페스트한인선교교회
                         </motion.h2>

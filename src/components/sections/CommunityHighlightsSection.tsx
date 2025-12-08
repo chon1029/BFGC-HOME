@@ -3,79 +3,36 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import Image from 'next/image'
-import { ArrowRight, Heart, MessageCircle, Calendar, Users, Camera, FileText, CreditCard, Download } from 'lucide-react'
+import { ArrowRight, Heart, Calendar, Camera, FileText, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
-const highlights = [
-    {
-        id: 1,
-        type: 'image',
-        title: '가을 야외 예배',
-        category: '행사',
-        date: '2025.10.15',
-        image: '/images/community_gathering.jpg',
-        size: 'large', // col-span-2 row-span-2
-    },
-    {
-        id: 2,
-        type: 'testimony',
-        title: '하나님의 은혜로 채워진 지난 1년',
-        author: '김철수 성도',
-        content: '처음 교회에 왔을 때의 낯설음이 이제는 따뜻한 가족의 품처럼 느껴집니다...',
-        category: '간증',
-        size: 'medium', // col-span-1 row-span-1
-    },
-    {
-        id: 3,
-        type: 'notice',
-        title: '청년부 겨울 수련회',
-        date: '2025.12.20 - 22',
-        location: '비전센터',
-        category: '청년부',
-        size: 'medium',
-    },
-    {
-        id: 4,
-        type: 'stats',
-        count: '120+',
-        label: '이번 주 참석 인원',
-        icon: Users,
-        size: 'small',
-    },
-    {
-        id: 5,
-        type: 'link',
-        title: '갤러리 더보기',
-        icon: Camera,
-        size: 'small',
-    }
-]
-
 export default function CommunityHighlightsSection() {
     const ref = useRef(null)
-    const isInView = useInView(ref, { once: true, margin: "-100px" })
+    const isInView = useInView(ref, { once: false, margin: "-100px" })
 
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.1
+                staggerChildren: 0.2,
+                delayChildren: 0.1
             }
         }
     }
 
     const itemVariants = {
-        hidden: { y: 20, opacity: 0 },
-        visible: {
-            y: 0,
+        hidden: { x: -50, opacity: 0 },
+        visible: (custom: number) => ({
+            x: 0,
             opacity: 1,
             transition: {
-                duration: 0.5
+                duration: 0.6,
+                delay: custom * 0.2
             }
-        }
+        })
     }
 
     return (
@@ -91,7 +48,7 @@ export default function CommunityHighlightsSection() {
                         <Badge variant="outline" className="mb-4 text-primary border-primary/20 bg-primary/5">
                             Community & Fellowship
                         </Badge>
-                        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
+                        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-4 drop-shadow-[2px_2px_2px_rgba(0,0,0,0.6)]">
                             함께 나누는 기쁨
                         </h2>
                         <p className="text-lg text-slate-600 dark:text-slate-300">
@@ -99,19 +56,19 @@ export default function CommunityHighlightsSection() {
                         </p>
                     </div>
 
-                    <Button variant="ghost" className="group hidden md:flex">
+                    <Button variant="ghost" className="group hidden md:flex hover:bg-gradient-to-r hover:from-sky-400 hover:to-purple-600 hover:text-white transition-all duration-300">
                         소식 전체보기 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Button>
                 </motion.div>
 
                 <motion.div
-                    className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[280px]"
+                    className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[280px]"
                     variants={containerVariants}
                     initial="hidden"
                     animate={isInView ? "visible" : "hidden"}
                 >
-                    {/* Main Image Card - Large */}
-                    <motion.div className="md:col-span-2 md:row-span-2 relative group overflow-hidden rounded-2xl shadow-sm" variants={itemVariants}>
+                    {/* Column 1: Main Event Image (2x2) */}
+                    <motion.div className="md:col-span-2 md:row-span-2 relative group overflow-hidden rounded-2xl shadow-sm" variants={itemVariants} custom={0}>
                         <Image
                             src="/images/community_gathering.jpg"
                             alt="Community Gathering"
@@ -127,18 +84,18 @@ export default function CommunityHighlightsSection() {
                         </div>
                     </motion.div>
 
-                    {/* Online Offering Card (Replaces Testimony) */}
-                    <motion.div className="md:col-span-1 md:row-span-1" variants={itemVariants}>
+                    {/* Column 2 Top: Online Offering */}
+                    <motion.div className="md:col-span-1 md:row-span-1" variants={itemVariants} custom={1}>
                         <Card className="h-full bg-white dark:bg-slate-800 border-none shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
                             <CardContent className="p-6 flex flex-col h-full">
                                 <div className="flex items-center justify-center gap-2 mb-4 text-orange-500">
                                     <Heart className="h-5 w-5 fill-orange-500" />
                                     <span className="font-semibold text-sm">온라인 헌금</span>
                                 </div>
-                                <h3 className="font-bold text-lg mb-2 group-hover:text-primary text-center justify-center transition-colors">
+                                <h3 className="font-bold text-lg mb-2 group-hover:text-primary text-center transition-colors">
                                     기쁨으로 드리는 예물
                                 </h3>
-                                <p className="text-slate-600 dark:text-slate-400 text-center justify-center text-sm mb-auto">
+                                <p className="text-slate-600 dark:text-slate-400 text-center text-sm mb-auto line-clamp-3">
                                     나와 내 백성이 무엇이기에 이처럼 즐거운 마음으로 드릴 힘이 있었나이까 모든 것이 주께로 말미암았사오니 우리가 주의 손에서 받은 것으로 주께 드렸을 뿐이니이다(역대상 29:14)
                                 </p>
                                 <div className="mt-4 flex items-center text-sm text-primary justify-center font-medium">
@@ -148,8 +105,8 @@ export default function CommunityHighlightsSection() {
                         </Card>
                     </motion.div>
 
-                    {/* Notice Card - Colored */}
-                    <motion.div className="md:col-span-1 md:row-span-1" variants={itemVariants}>
+                    {/* Column 3 Top: Youth Retreat */}
+                    <motion.div className="md:col-span-1 md:row-span-1" variants={itemVariants} custom={2}>
                         <Card className="h-full bg-blue-600 text-white border-none shadow-sm relative overflow-hidden group cursor-pointer">
                             <div className="absolute top-0 right-0 p-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl transition-transform group-hover:scale-150 duration-700" />
                             <CardContent className="p-6 flex flex-col h-full relative z-10">
@@ -171,8 +128,8 @@ export default function CommunityHighlightsSection() {
                         </Card>
                     </motion.div>
 
-                    {/* Bulletin Download Card (Replaces Stats) */}
-                    <motion.div className="md:col-span-1 md:row-span-1" variants={itemVariants}>
+                    {/* Column 2 Bottom: Bulletin Download */}
+                    <motion.div className="md:col-span-1 md:row-span-1" variants={itemVariants} custom={1}>
                         <Card className="h-full bg-slate-100 dark:bg-slate-800 border-none shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
                             <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
                                 <div className="h-12 w-12 rounded-full bg-white dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 mb-4 group-hover:scale-110 transition-transform shadow-sm">
@@ -187,8 +144,8 @@ export default function CommunityHighlightsSection() {
                         </Card>
                     </motion.div>
 
-                    {/* Gallery Link Card */}
-                    <motion.div className="md:col-span-1 md:row-span-1" variants={itemVariants}>
+                    {/* Column 3 Bottom: Gallery */}
+                    <motion.div className="md:col-span-1 md:row-span-1" variants={itemVariants} custom={2}>
                         <Card className="h-full bg-slate-900 dark:bg-slate-800 text-white border-none shadow-sm group cursor-pointer overflow-hidden">
                             <CardContent className="p-0 h-full relative">
                                 <Image
@@ -209,7 +166,7 @@ export default function CommunityHighlightsSection() {
                 </motion.div>
 
                 <div className="mt-8 text-center md:hidden">
-                    <Button variant="outline" className="w-full">
+                    <Button variant="outline" className="w-full hover:bg-gradient-to-r hover:from-sky-400 hover:to-purple-600 hover:text-white hover:border-transparent transition-all duration-300">
                         소식 전체보기 <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                 </div>

@@ -70,7 +70,7 @@ export default function LatestSermonSection() {
                         className="space-y-2"
                     >
                         <h3 className="text-sky-400 font-bold text-lg tracking-wide uppercase">Latest Sermons</h3>
-                        <h2 className="text-4xl font-bold text-white">최신 설교 말씀</h2>
+                        <h2 className="text-4xl font-semibold text-white">최신 설교 말씀</h2>
                     </motion.div>
 
                     <motion.a

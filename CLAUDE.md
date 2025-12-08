@@ -189,8 +189,9 @@ function SermonCard({ title, date }: SermonCardProps) {
 ## 🎨 디자인 원칙
 
 ### 브랜드 컬러
-- **Primary**: `#0c076d` (깊은 보라/남색) - 신뢰, 영성
-- **Accent**: `#fb5800` (생동감 있는 오렌지) - 열정, 에너지
+- **Sky Blue**: `#38bdf8` (스카이 블루) - 생동감, 희망, 투명함
+- **Purple**: `#a855f7` (퍼플) - 영성, 신비, 고귀함
+- **Gradient**: 스카이 블루 → 퍼플 그라데이션 - 교회의 정체성을 표현하는 핵심 디자인 요소
 - **Background**: `#ffffff` (화이트) - 깔끔함, 순수
 
 ### 타이포그래피

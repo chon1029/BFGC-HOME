@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
@@ -18,7 +17,7 @@ export default function RootLayout({
       <body
         className="font-sans antialiased"
       >
-        <Header />
+        {/* Header는 각 페이지에서 개별 관리 */}
         <main className="min-h-screen">
           {children}
         </main>

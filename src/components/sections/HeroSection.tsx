@@ -46,15 +46,17 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="max-w-5xl mx-auto space-y-8"
         >
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tight leading-tight drop-shadow-2xl"
-            style={{ textShadow: '0 4px 30px rgba(0,0,0,0.5)' }}>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight leading-tight drop-shadow-xl"
+            style={{ textShadow: '6px 6px 8px rgba(0,0,0,0.6)' }}>
             예배와 선교에<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400 filter brightness-125">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400 filter brightness-12 drop-shadow-[4px_4px_6px_rgba(0,0,0,0.8)]"
+              style={{ textShadow: 'none' }}
+            >
               헌신된 교회
             </span>
           </h1>
 
-          <div className="space-y-2 drop-shadow-xl" style={{ textShadow: '0 2px 20px rgba(0,0,0,0.8)' }}>
+          <div className="space-y-2 drop-shadow-xl" style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.8)' }}>
             <p className="text-xl md:text-3xl text-white font-bold">
               부다페스트한인선교교회에 오신 것을 환영합니다.
             </p>
