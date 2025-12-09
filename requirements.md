@@ -16,7 +16,7 @@
   - 플러그인 간 충돌로 인한 화면 깨짐
   - 느린 로딩 속도
   - 유지보수 어려움
-- **해결 방안**: Next.js 14 기반 완전 재구축
+- **해결 방안**: Next.js 14 + Sanity (Headless CMS) + Vercel 배포로 완전 재구축
 
 ### 프로젝트 목표
 1. **반응형 완벽 지원**: 모든 디바이스에서 깨지지 않는 UI
@@ -448,11 +448,12 @@
 - **이미지**: public/images/ 폴더 관리
 - **수정 방법**: 코드 수정 후 재배포
 
-### 동적 콘텐츠 (옵션)
-- **설교**: JSON 파일 또는 Headless CMS (Sanity, Contentful)
-- **주보**: PDF 파일 업로드
-- **갤러리**: 이미지 폴더 관리
-- **일용할양식**: JSON 또는 Markdown 파일
+### 동적 콘텐츠 (Sanity CMS)
+- **설교**: Sanity Content Lake에 저장 및 스트리밍 URL 관리
+- **주보**: PDF 파일 Sanity Asset으로 관리
+- **갤러리**: Sanity Image Pipeline 사용 (자동 최적화)
+- **일용할양식**: Sanity Editor로 작성 및 관리
+- **기도제목**: Sanity Document로 관리
 
 ### 폼 데이터 처리
 - **새가족 등록**: 이메일 전송 (Resend, SendGrid)
@@ -465,13 +466,13 @@
 ## 🚀 배포 요구사항
 
 ### 호스팅
-- **서비스**: cafe24.com
-- **배포 방식**: Static Export (SSG)
-- **빌드 명령**: `npm run build && npm run export`
+- **서비스**: Vercel (vercel.com)
+- **배포 방식**: Git Integration (Push to Deploy)
+- **빌드 명령**: `next build` (Vercel 자동 감지)
 
 ### 도메인
-- **현재**: bfgc3.mycafe24.com (서브도메인)
-- **목표**: 독립 도메인 (추후 결정 가능)
+- **현재**: bfgc3.mycafe24.com (구버전)
+- **목표**: 독립 도메인 연결 (Vercel DNS 설정)
 
 ### CI/CD (선택)
 - **Git**: GitHub 저장소
@@ -532,7 +533,7 @@
 - ✅ 성능 최적화
 - ✅ SEO 최적화
 - ✅ 최종 테스트
-- ✅ cafe24 배포
+- ✅ Vercel 배포 및 도메인 연결
 
 ---
 

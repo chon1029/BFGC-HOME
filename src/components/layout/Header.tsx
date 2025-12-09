@@ -3,10 +3,20 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import { Menu, X, ChevronDown } from 'lucide-react'
+import { Menu, X, ChevronDown, User, LogOut, Settings } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useSession, signOut } from 'next-auth/react'
 import { mainNavigation } from '@/lib/navigation'
 import { cn } from '@/lib/utils'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 /**
  * Header 컴포넌트
@@ -18,6 +28,7 @@ interface HeaderProps {
 }
 
 export default function Header({ transparent = false }: HeaderProps) {
+  const { data: session } = useSession()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [scrolled, setScrolled] = useState(false)
@@ -158,29 +169,92 @@ export default function Header({ transparent = false }: HeaderProps) {
           ))}
         </nav>
 
-        {/* 로그인 버튼 (항상 화이트 + 그라데이션 보더) */}
+        {/* 로그인/사용자 메뉴 */}
         <div className="hidden lg:flex items-center">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="relative p-[1px] rounded-xl overflow-hidden group transition-all duration-500"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-sky-400 to-violet-400 opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
-
-            <Link
-              href="/login"
-              className={cn(
-                "relative block px-6 py-2 rounded-[10px] font-bold text-sm tracking-wide transition-all duration-500",
-                scrolled
-                  ? "bg-black text-white group-hover:bg-black/80"
-                  : "bg-black/40 backdrop-blur-sm text-white group-hover:bg-black/60"
-              )}
+          {session ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative flex items-center gap-2 p-1 pr-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors border border-white/10"
+                >
+                  <Avatar className="h-8 w-8 border border-white/20">
+                    <AvatarImage src={session.user?.image || ''} alt={session.user?.name || ''} />
+                    <AvatarFallback className="bg-sky-500 text-white">
+                      {session.user?.name?.[0] || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className={cn(
+                    "text-sm font-medium",
+                    transparent ? "text-slate-900" : "text-white"
+                  )}>
+                    {session.user?.name}
+                  </span>
+                  <ChevronDown className={cn(
+                    "h-4 w-4 opacity-50",
+                    transparent ? "text-slate-900" : "text-white"
+                  )} />
+                </motion.button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 bg-white/95 backdrop-blur-xl border-slate-200 dark:bg-slate-900/95 dark:border-slate-800">
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{session.user?.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {session.user?.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link href="/settings/profile" className="flex items-center w-full">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>프로필</span>
+                    <span className="ml-auto text-xs tracking-widest text-slate-500">⇧⌘P</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link href="/settings/account" className="flex items-center w-full">
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>설정</span>
+                    <span className="ml-auto text-xs tracking-widest text-slate-500">⌘S</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/20"
+                  onClick={() => signOut()}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>로그아웃</span>
+                  <span className="ml-auto text-xs tracking-widest text-slate-500">⇧⌘Q</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative p-[1px] rounded-xl overflow-hidden group transition-all duration-500"
             >
-              <span className="bg-gradient-to-r from-sky-200 to-violet-200 bg-clip-text text-transparent group-hover:text-white transition-all duration-300">
-                로그인
-              </span>
-            </Link>
-          </motion.div>
+              <div className="absolute inset-0 bg-gradient-to-r from-sky-400 to-violet-400 opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+
+              <Link
+                href="/login"
+                className={cn(
+                  "relative block px-6 py-2 rounded-[10px] font-bold text-sm tracking-wide transition-all duration-500",
+                  scrolled
+                    ? "bg-black text-white group-hover:bg-black/80"
+                    : "bg-black/40 backdrop-blur-sm text-white group-hover:bg-black/60"
+                )}
+              >
+                <span className="bg-gradient-to-r from-sky-200 to-violet-200 bg-clip-text text-transparent group-hover:text-white transition-all duration-300">
+                  로그인
+                </span>
+              </Link>
+            </motion.div>
+          )}
         </div>
 
         {/* 모바일 메뉴 버튼 (항상 화이트) */}
@@ -223,6 +297,22 @@ export default function Header({ transparent = false }: HeaderProps) {
                   </button>
                 </div>
 
+                {/* 모바일 사용자 정보 */}
+                {session && (
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10">
+                    <Avatar className="h-10 w-10 border border-white/20">
+                      <AvatarImage src={session.user?.image || ''} alt={session.user?.name || ''} />
+                      <AvatarFallback className="bg-sky-500 text-white">
+                        {session.user?.name?.[0] || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-white truncate">{session.user?.name}</p>
+                      <p className="text-xs text-gray-400 truncate">{session.user?.email}</p>
+                    </div>
+                  </div>
+                )}
+
                 <nav className="space-y-6">
                   {mainNavigation.map((item, i) => (
                     <motion.div
@@ -257,13 +347,26 @@ export default function Header({ transparent = false }: HeaderProps) {
                 </nav>
 
                 <div className="pt-8 border-t border-white/10">
-                  <Link
-                    href="/login"
-                    onClick={closeMobileMenu}
-                    className="flex items-center justify-center w-full py-4 rounded-xl bg-gradient-to-r from-sky-600 to-violet-600 text-white font-bold text-lg shadow-lg shadow-violet-900/20"
-                  >
-                    로그인
-                  </Link>
+                  {session ? (
+                    <button
+                      onClick={() => {
+                        signOut()
+                        closeMobileMenu()
+                      }}
+                      className="flex items-center justify-center w-full py-4 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 font-bold text-lg transition-colors border border-red-500/20"
+                    >
+                      <LogOut className="mr-2 h-5 w-5" />
+                      로그아웃
+                    </button>
+                  ) : (
+                    <Link
+                      href="/login"
+                      onClick={closeMobileMenu}
+                      className="flex items-center justify-center w-full py-4 rounded-xl bg-gradient-to-r from-sky-600 to-violet-600 text-white font-bold text-lg shadow-lg shadow-violet-900/20"
+                    >
+                      로그인
+                    </Link>
+                  )}
                 </div>
               </div>
             </motion.div>

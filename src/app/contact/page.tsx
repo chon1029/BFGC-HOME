@@ -1,15 +1,10 @@
+import ContactForm from '@/components/sections/contact/ContactForm'
+
 export const metadata = {
-    title: 'Contact | 부다페스트한인선교교회',
-    description: '문의사항',
+    title: '문의하기 | 부다페스트한인선교교회',
+    description: '부다페스트한인선교교회에 문의하세요. 빠른 시일 내에 답변드리겠습니다.',
 }
 
 export default function ContactPage() {
-    return (
-        <div className="min-h-screen pt-32 pb-20">
-            <div className="container mx-auto px-4">
-                <h1 className="text-4xl font-bold text-center mb-8">Contact</h1>
-                <p className="text-center text-gray-600">Coming Soon...</p>
-            </div>
-        </div>
-    )
+    return <ContactForm />
 }
