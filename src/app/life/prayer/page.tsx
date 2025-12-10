@@ -1,15 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
 import { motion } from 'framer-motion'
 import { client } from '@/lib/sanity'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Calendar, ChevronRight, Sparkles } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Calendar, ChevronRight, Sparkles, Plus } from 'lucide-react'
 import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import Link from 'next/link'
 import { WeeklyPrayerCard } from '@/components/sections/prayer/WeeklyPrayerCard'
 import { PrayerHeroSection } from '@/components/sections/prayer/PrayerHeroSection'
+import { WeeklyPrayerModal } from '@/components/modals/WeeklyPrayerModal'
 import PageLayout from '@/components/layout/PageLayout'
 
 interface DailyPrayer {
@@ -34,9 +37,13 @@ interface WeeklyPrayer {
 }
 
 export default function PrayerPage() {
+    const { data: session } = useSession()
     const [latestPrayer, setLatestPrayer] = useState<WeeklyPrayer | null>(null)
     const [archivePrayers, setArchivePrayers] = useState<WeeklyPrayer[]>([])
     const [loading, setLoading] = useState(true)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const isAdmin = session?.user?.role === 'admin'
 
     useEffect(() => {
         fetchPrayers()
@@ -106,6 +113,19 @@ export default function PrayerPage() {
                     currentWeek={currentWeek}
                     mainTheme={mainTheme}
                 />
+
+                {/* Admin Button */}
+                {isAdmin && (
+                    <div className="flex justify-end">
+                        <Button
+                            onClick={() => setIsModalOpen(true)}
+                            className="bg-sky-600 hover:bg-sky-700 shadow-lg"
+                        >
+                            <Plus className="mr-2 h-4 w-4" />
+                            기도문 작성
+                        </Button>
+                    </div>
+                )}
 
                 {!latestPrayer ? (
                     <motion.div
@@ -214,6 +234,12 @@ export default function PrayerPage() {
                     </>
                 )}
             </div>
+
+            {/* Weekly Prayer Modal */}
+            <WeeklyPrayerModal
+                open={isModalOpen}
+                onOpenChange={setIsModalOpen}
+            />
         </PageLayout>
     )
 }

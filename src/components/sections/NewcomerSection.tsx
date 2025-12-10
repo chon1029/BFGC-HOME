@@ -83,7 +83,7 @@ export default function NewcomerSection() {
                             size="lg"
                             className="bg-gradient-to-r from-sky-500 to-violet-500 hover:brightness-110 text-white text-lg px-8 py-6 rounded-md drop-shadow-[2px_2px_4px_rgba(0,0,0,0.8)] hover:shadow-xl transition-all duration-300 group border-0"
                         >
-                            <Link href="/newcomer/guide" className="flex items-center gap-2">
+                            <Link href="/guide/newcomer" className="flex items-center gap-2">
                                 새가족 안내 자세히 보기
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </Link>

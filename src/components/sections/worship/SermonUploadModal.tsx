@@ -45,9 +45,18 @@ type SermonFormValues = z.infer<typeof sermonSchema>
 // Component
 // ----------------------------------------------------------------------
 
-export function SermonUploadModal() {
-    const [open, setOpen] = useState(false)
+interface SermonUploadModalProps {
+    open?: boolean
+    onOpenChange?: (open: boolean) => void
+}
+
+export function SermonUploadModal({ open: externalOpen, onOpenChange: externalOnOpenChange }: SermonUploadModalProps = {}) {
+    const [internalOpen, setInternalOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+
+    const isControlled = externalOpen !== undefined && externalOnOpenChange !== undefined
+    const open = isControlled ? externalOpen : internalOpen
+    const setOpen = isControlled ? externalOnOpenChange : setInternalOpen
 
     const form = useForm<SermonFormValues>({
         resolver: zodResolver(sermonSchema),
@@ -66,12 +75,8 @@ export function SermonUploadModal() {
     const onSubmit = async (values: SermonFormValues) => {
         setIsLoading(true)
         try {
-            // TODO: 실제 API 연동 (Sanity)
             console.log('Form Values:', values)
-
-            // Mock API Call
             await new Promise(resolve => setTimeout(resolve, 1500))
-
             setOpen(false)
             form.reset()
             alert('설교가 성공적으로 등록되었습니다!')
@@ -85,11 +90,13 @@ export function SermonUploadModal() {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button className="bg-sky-600 hover:bg-sky-700 text-white gap-2 shadow-lg shadow-sky-500/20">
-                    <Plus className="w-4 h-4" /> 설교 등록
-                </Button>
-            </DialogTrigger>
+            {!isControlled && (
+                <DialogTrigger asChild>
+                    <Button className="bg-sky-600 hover:bg-sky-700 text-white gap-2 shadow-lg shadow-sky-500/20">
+                        <Plus className="w-4 h-4" /> 설교 등록
+                    </Button>
+                </DialogTrigger>
+            )}
             <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold flex items-center gap-2">

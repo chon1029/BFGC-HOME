@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Navigation } from 'swiper/modules';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -176,13 +177,13 @@ export default function HeroSection() {
 
               {/* Button */}
               <motion.div variants={textVariants} custom={3} className="pt-8">
-                <button className="group relative px-8 py-3 bg-transparent overflow-hidden rounded-full border border-white/50 transition-all duration-300 hover:border-yellow-400 hover:text-black">
+                <Link href="/guide/greeting" className="group relative block w-fit px-8 py-3 bg-transparent overflow-hidden rounded-full border border-white/50 transition-all duration-300 hover:border-yellow-400 hover:text-black">
                   <div className="absolute inset-0 w-full h-full bg-yellow-400 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[0.22,1,0.36,1]" />
                   <div className="relative flex items-center space-x-3">
                     <span className="uppercase tracking-widest text-sm font-bold">Discover More</span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
-                </button>
+                </Link>
               </motion.div>
             </motion.div>
           </AnimatePresence>

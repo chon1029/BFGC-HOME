@@ -7,13 +7,12 @@ import {
     LayoutDashboard,
     Users,
     FileText,
-    Video,
     Settings,
     BarChart3,
     ShieldAlert,
     LogOut,
     Menu,
-    BookOpen
+    Home
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
@@ -30,18 +29,6 @@ const sidebarItems = [
         title: '회원 관리',
         href: '/admin/users',
         icon: Users,
-        variant: 'ghost',
-    },
-    {
-        title: '설교 관리',
-        href: '/worship/sermons',
-        icon: Video,
-        variant: 'ghost',
-    },
-    {
-        title: '주간기도문 관리',
-        href: '/admin/weekly-prayer',
-        icon: BookOpen,
         variant: 'ghost',
     },
     {
@@ -64,7 +51,7 @@ const sidebarItems = [
     },
     {
         title: '설정',
-        href: '/settings',
+        href: '/admin/settings',
         icon: Settings,
         variant: 'ghost',
     },
@@ -88,6 +75,20 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
                         교회 행정 관리 시스템
                     </p>
                 </div>
+
+                {/* 홈으로 돌아가기 버튼 */}
+                <div className="px-3">
+                    <Link href="/">
+                        <Button
+                            variant="outline"
+                            className="w-full justify-start border-sky-600 text-sky-400 hover:bg-sky-600 hover:text-white transition-colors"
+                        >
+                            <Home className="mr-2 h-4 w-4" />
+                            🏠 홈으로 돌아가기
+                        </Button>
+                    </Link>
+                </div>
+
                 <div className="px-3 py-2">
                     <div className="space-y-1">
                         {sidebarItems.map((item) => (

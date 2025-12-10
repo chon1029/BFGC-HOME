@@ -11,14 +11,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/lib/utils'
 
 interface GalleryUploadModalProps {
-    isOpen: boolean
-    onClose: () => void
-    onSuccess: () => void
+    open: boolean
+    onOpenChange: (open: boolean) => void
+    onSuccess?: () => void
 }
 
 const CATEGORIES = ['예배', '친교', '행사', '다음세대', '선교', '기타']
 
-export function GalleryUploadModal({ isOpen, onClose, onSuccess }: GalleryUploadModalProps) {
+export function GalleryUploadModal({ open, onOpenChange, onSuccess }: GalleryUploadModalProps) {
     const [loading, setLoading] = useState(false)
     const [title, setTitle] = useState('')
     const [category, setCategory] = useState('')
@@ -89,8 +89,8 @@ export function GalleryUploadModal({ isOpen, onClose, onSuccess }: GalleryUpload
             if (!response.ok) throw new Error('Upload failed')
 
             alert('앨범이 성공적으로 등록되었습니다!')
-            onSuccess()
-            onClose()
+            onSuccess?.()
+            onOpenChange(false)
             // Reset form
             setTitle('')
             setCategory('')
@@ -108,7 +108,7 @@ export function GalleryUploadModal({ isOpen, onClose, onSuccess }: GalleryUpload
 
     return (
         <AnimatePresence>
-            {isOpen && (
+            {open && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
@@ -118,7 +118,7 @@ export function GalleryUploadModal({ isOpen, onClose, onSuccess }: GalleryUpload
                     >
                         <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center sticky top-0 bg-white dark:bg-slate-900 z-10">
                             <h2 className="text-xl font-bold">새 앨범 만들기</h2>
-                            <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
+                            <button onClick={() => onOpenChange(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
@@ -260,7 +260,7 @@ export function GalleryUploadModal({ isOpen, onClose, onSuccess }: GalleryUpload
                             </div>
 
                             <div className="pt-4 flex justify-end gap-3">
-                                <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
+                                <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
                                     취소
                                 </Button>
                                 <Button type="submit" className="bg-sky-600 hover:bg-sky-700 text-white" disabled={loading}>

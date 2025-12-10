@@ -338,8 +338,8 @@ export default function GalleryPage() {
 
             {/* Upload Modal */}
             <GalleryUploadModal
-                isOpen={isUploadModalOpen}
-                onClose={() => setIsUploadModalOpen(false)}
+                open={isUploadModalOpen}
+                onOpenChange={setIsUploadModalOpen}
                 onSuccess={fetchGalleryItems}
             />
         </PageLayout>

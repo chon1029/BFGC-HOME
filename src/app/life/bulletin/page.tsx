@@ -363,8 +363,8 @@ export default function BulletinPage() {
             </div>
 
             <BulletinUploadModal
-                isOpen={isUploadModalOpen}
-                onClose={() => setIsUploadModalOpen(false)}
+                open={isUploadModalOpen}
+                onOpenChange={setIsUploadModalOpen}
                 onSuccess={fetchBulletins}
             />
         </PageLayout>

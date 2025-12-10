@@ -1,11 +1,17 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, Eye, FileText, AlertTriangle, ArrowUpRight, Mic2, BookOpen, Image as ImageIcon, Newspaper, Settings, ExternalLink } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { WeeklyPrayerModal } from '@/components/modals/WeeklyPrayerModal'
+import { SermonUploadModal } from '@/components/sections/worship/SermonUploadModal'
+import { DailyBreadUploadModal } from '@/components/sections/worship/DailyBreadUploadModal'
+import { GalleryUploadModal } from '@/components/sections/gallery/GalleryUploadModal'
+import { BulletinUploadModal } from '@/components/sections/bulletin/BulletinUploadModal'
 
 // ----------------------------------------------------------------------
 // Quick Actions Data
@@ -15,53 +21,87 @@ const QUICK_ACTIONS = [
         title: '설교 관리',
         description: '주일 설교 및 특별 집회 영상 업로드',
         icon: Mic2,
-        href: '/worship/sermons',
         color: 'text-red-500',
         bg: 'bg-red-50 dark:bg-red-900/20',
+        type: 'modal' as const,
+        modalType: 'sermon',
     },
     {
         title: '주간 기도문',
         description: '이번 주 기도제목 작성 및 발행',
         icon: FileText,
-        href: '/admin/weekly-prayer/create', // 유일하게 admin 내부에 있는 기능
         color: 'text-violet-500',
         bg: 'bg-violet-50 dark:bg-violet-900/20',
+        type: 'modal' as const,
+        modalType: 'prayer',
     },
     {
         title: '묵상(QT) 나눔',
         description: '매일성경 묵상 본문 및 해설 등록',
         icon: BookOpen,
-        href: '/worship/daily-bread',
         color: 'text-amber-500',
         bg: 'bg-amber-50 dark:bg-amber-900/20',
+        type: 'modal' as const,
+        modalType: 'dailyBread',
     },
     {
         title: '갤러리 관리',
         description: '교회 행사 사진 및 앨범 업로드',
         icon: ImageIcon,
-        href: '/life/gallery',
         color: 'text-sky-500',
         bg: 'bg-sky-50 dark:bg-sky-900/20',
+        type: 'modal' as const,
+        modalType: 'gallery',
     },
     {
         title: '주보 업로드',
         description: '이번 주 주보 PDF 및 썸네일 등록',
         icon: Newspaper,
-        href: '/life/bulletin',
         color: 'text-green-500',
         bg: 'bg-green-50 dark:bg-green-900/20',
+        type: 'modal' as const,
+        modalType: 'bulletin',
     },
     {
         title: '사이트 설정',
         description: '기본 정보 수정 및 관리자 계정 관리',
         icon: Settings,
-        href: '/settings',
+        href: '/admin/settings',
         color: 'text-slate-500',
         bg: 'bg-slate-50 dark:bg-slate-800',
+        type: 'link' as const,
     },
 ]
 
 export default function AdminDashboardPage() {
+    const [isPrayerModalOpen, setIsPrayerModalOpen] = useState(false)
+    const [isSermonModalOpen, setIsSermonModalOpen] = useState(false)
+    const [isDailyBreadModalOpen, setIsDailyBreadModalOpen] = useState(false)
+    const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false)
+    const [isBulletinModalOpen, setIsBulletinModalOpen] = useState(false)
+
+    const handleTileClick = (action: typeof QUICK_ACTIONS[0]) => {
+        if (action.type === 'modal') {
+            switch (action.modalType) {
+                case 'prayer':
+                    setIsPrayerModalOpen(true)
+                    break
+                case 'sermon':
+                    setIsSermonModalOpen(true)
+                    break
+                case 'dailyBread':
+                    setIsDailyBreadModalOpen(true)
+                    break
+                case 'gallery':
+                    setIsGalleryModalOpen(true)
+                    break
+                case 'bulletin':
+                    setIsBulletinModalOpen(true)
+                    break
+            }
+        }
+    }
+
     return (
         <div className="space-y-8">
             {/* 1. Header */}
@@ -132,8 +172,8 @@ export default function AdminDashboardPage() {
             <div>
                 <h3 className="text-lg font-semibold mb-4">바로가기 (Quick Actions)</h3>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {QUICK_ACTIONS.map((action, index) => (
-                        <Link key={index} href={action.href}>
+                    {QUICK_ACTIONS.map((action, index) => {
+                        const cardContent = (
                             <Card className="hover:shadow-md transition-shadow cursor-pointer border-slate-200 dark:border-slate-800 h-full">
                                 <CardHeader className="flex flex-row items-center gap-4 pb-2">
                                     <div className={`p-2 rounded-lg ${action.bg}`}>
@@ -145,11 +185,25 @@ export default function AdminDashboardPage() {
                                     <ExternalLink className="w-4 h-4 ml-auto text-slate-400" />
                                 </CardHeader>
                                 <CardContent>
-                                    <CardDescription>{action.description}</CardDescription>
+                                    <CardDescription className="text-sm">{action.description}</CardDescription>
                                 </CardContent>
                             </Card>
-                        </Link>
-                    ))}
+                        )
+
+                        if (action.type === 'modal') {
+                            return (
+                                <div key={index} onClick={() => handleTileClick(action)}>
+                                    {cardContent}
+                                </div>
+                            )
+                        }
+
+                        return (
+                            <Link key={index} href={action.href!}>
+                                {cardContent}
+                            </Link>
+                        )
+                    })}
                 </div>
             </div>
 
@@ -228,6 +282,28 @@ export default function AdminDashboardPage() {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* All Modals */}
+            <WeeklyPrayerModal
+                open={isPrayerModalOpen}
+                onOpenChange={setIsPrayerModalOpen}
+            />
+            <SermonUploadModal
+                open={isSermonModalOpen}
+                onOpenChange={setIsSermonModalOpen}
+            />
+            <DailyBreadUploadModal
+                open={isDailyBreadModalOpen}
+                onOpenChange={setIsDailyBreadModalOpen}
+            />
+            <GalleryUploadModal
+                open={isGalleryModalOpen}
+                onOpenChange={setIsGalleryModalOpen}
+            />
+            <BulletinUploadModal
+                open={isBulletinModalOpen}
+                onOpenChange={setIsBulletinModalOpen}
+            />
         </div>
     )
 }
