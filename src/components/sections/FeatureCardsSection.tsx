@@ -45,13 +45,25 @@ export default function FeatureCardsSection() {
         <section className="py-12 pb-24 bg-white dark:bg-slate-950" ref={ref}>
             <div className="container px-8 md:px-12 lg:px-20 mx-auto max-w-7xl">
                 <div className="flex flex-col items-end mb-12">
-                    <p className="text-sm md:text-base text-slate-500 font-medium mb-1">예수님을 닮아가도록 격려하는</p>
-                    <h2
+                    <motion.p
+                        initial={{ opacity: 0, x: -100 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: false, margin: "-100px" }}
+                        transition={{ duration: 1.0, ease: "easeOut", delay: 0.1 }}
+                        className="text-sm md:text-base text-slate-500 font-medium mb-1"
+                    >
+                        예수님을 닮아가도록 격려하는
+                    </motion.p>
+                    <motion.h2
+                        initial={{ opacity: 0, x: -150 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: false, margin: "-100px" }}
+                        transition={{ duration: 1.2, ease: "easeOut" }}
                         className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white"
                         style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}
                     >
                         부다페스트한인선교교회
-                    </h2>
+                    </motion.h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">

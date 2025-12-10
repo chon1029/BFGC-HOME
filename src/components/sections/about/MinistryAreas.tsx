@@ -33,28 +33,28 @@ const ministryAreas: MinistryArea[] = [
   {
     id: 1,
     title: '은혜 충만한 예배',
-    description: '만세만 주께는 은혜만에배가 바로 높음을 강력한 은혜를 강렬하는 은혜예배',
+    description: '펜데믹 후에도 온라인예배 비중 높음 \n강력한 은혜를 경험하는 현장예배 강화',
     icon: Church,
     position: 'left',
   },
   {
     id: 2,
     title: '다음세대, 청년세대 부흥',
-    description: '새대인 운동에 믿는 주직과 운영 시험 다음세대, 청년세대를 위한 맞춤 시역',
+    description: '시대와 문화에 맞는 조직과 운영 시행 \n다음세대, 청년세대를 위한 맞춤 사역',
     icon: Users,
     position: 'left',
   },
   {
     id: 3,
     title: '공동체성 강화',
-    description: '개인주의적 성향 강화와 역량과 협력을 통한 시.지적 흐름',
+    description: '개인주의적 성향 강화 \n연합과 협력을 통한 시.지적 흐름',
     icon: Heart,
     position: 'left',
   },
   {
     id: 4,
-    title: '선교열망 강화',
-    description: '예배인 양육을 통해 순전한 성도들을 통해 세계 도재를 향이가 결박 복음을 증거하는 증거 끈들에',
+    title: '선교역량 강화',
+    description: '예배와 양육을 통해 훈련된 성도들을 통해 \n힘써 복음을 증거하게 하는 증거공동체',
     icon: Globe,
     position: 'left',
   },
@@ -62,28 +62,28 @@ const ministryAreas: MinistryArea[] = [
   {
     id: 5,
     title: '신앙교육 및 성도관리',
-    description: '강렬한이 대든의 공직에 내사회 수잎는 신앙교육 영적 성장을 위한 영농대 산업과리',
+    description: '강력한 이단들의 공격에 대처할 수 있는 \n신앙교육 영적성장을 위한 양육과 신앙적 관리',
     icon: BookOpen,
     position: 'right',
   },
   {
     id: 6,
     title: '목회적 돌봄을 통한 사회적 책임',
-    description: '고령화로 인하는 오랜데 대한 목적적 통합 교회로 사회 속에서 행적과 노연과 존업안 입종을 맛이하도록 책임 있는 목회적 통합',
+    description: '고령화로 인한 노인에 대한 목회적 돌봄 \n다음세대, 청년세대의 진학/취업/창업지원',
     icon: HandHeart,
     position: 'right',
   },
   {
     id: 7,
-    title: '교회 보편도상',
-    description: '개인주도, 목중저도의 힌개에 사랑과 개인주의 책이가는 교회가 아닌 방평하고 성온 교회로 전환',
+    title: '교회 브랜드화',
+    description: '개인전도, 축호전도의 힌계(사생활, 개인주의) 찾아가는 교회가 아닌 방문하고 싶은 교회 전환',
     icon: Cross,
     position: 'right',
   },
   {
     id: 8,
     title: '세대에 맞는 프로그램 운영',
-    description: '교회 안에 있는 디당한 세대에 맞춤식 프로그램 진행 문화적글을 민여이되장한 용도로 활용',
+    description: '교회 안에 있는 디당한 세대에 맞춤식 프로그램 진행 문화공간을 만들어 다양한 용도로 활용',
     icon: Sparkles,
     position: 'right',
   },
@@ -102,7 +102,13 @@ export default function MinistryAreas() {
   const rightAreas = ministryAreas.filter((area) => area.position === 'right')
 
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="py-16 md:py-24 bg-gradient-to-b from-sky-50/50 to-purple-50/50 relative overflow-hidden">
+      {/* 배경 장식 */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-300/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-300/10 rounded-full blur-3xl" />
+      </div>
+
       <Container>
         {/* 섹션 헤더 */}
         <motion.div
@@ -112,10 +118,10 @@ export default function MinistryAreas() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <Badge variant="outline" className="mb-4 text-base px-6 py-2">
-            <span className="text-2xl font-bold mr-2">03</span>
-            사역영역
-          </Badge>
+          <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-gradient-to-r from-sky-500/10 to-purple-500/10 backdrop-blur-md border border-sky-500/20 shadow-lg mb-4">
+            <span className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-purple-600 bg-clip-text text-transparent">03</span>
+            <span className="text-base font-bold text-slate-800 dark:text-slate-200">사역영역</span>
+          </div>
           <p className="text-sm text-muted-foreground">부다페스트한인선교교회</p>
         </motion.div>
 
@@ -132,14 +138,14 @@ export default function MinistryAreas() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: false, amount: 0.3 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="flex items-start gap-4 p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-primary/10"
+                  className="flex items-start gap-4 p-6 bg-white/60 backdrop-blur-md rounded-xl shadow-lg hover:shadow-xl transition-all border border-sky-100 hover:border-sky-300 group"
                 >
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                    <area.icon className="w-6 h-6 text-primary" />
+                  <div className="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <area.icon className="w-6 h-6 text-sky-600" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold text-lg mb-2">{area.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <h3 className="font-bold text-lg mb-2 text-slate-800">{area.title}</h3>
+                    <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
                       {area.description}
                     </p>
                   </div>
@@ -156,9 +162,9 @@ export default function MinistryAreas() {
                 transition={{ duration: 0.8, delay: 0.3 }}
                 className="relative"
               >
-                <div className="w-48 h-48 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-2xl">
+                <div className="w-48 h-48 rounded-full bg-gradient-to-br from-sky-500 to-purple-600 flex items-center justify-center shadow-2xl z-10 relative">
                   <div className="text-center text-white p-4">
-                    <p className="text-xs font-semibold mb-1">부다페스트한인선교교회</p>
+                    <p className="text-xs font-semibold mb-1 opacity-90">부다페스트한인선교교회</p>
                     <p className="text-sm font-bold leading-tight">
                       예배가 중심이 된
                       <br />
@@ -168,7 +174,8 @@ export default function MinistryAreas() {
                 </div>
 
                 {/* 펄스 애니메이션 */}
-                <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
+                <div className="absolute inset-0 rounded-full bg-sky-500/30 animate-ping" />
+                <div className="absolute -inset-4 rounded-full border border-sky-200/50 animate-pulse" />
               </motion.div>
             </div>
 
@@ -181,14 +188,14 @@ export default function MinistryAreas() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: false, amount: 0.3 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="flex items-start gap-4 p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-primary/10"
+                  className="flex items-start gap-4 p-6 bg-white/60 backdrop-blur-md rounded-xl shadow-lg hover:shadow-xl transition-all border border-purple-100 hover:border-purple-300 group"
                 >
-                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
-                    <area.icon className="w-6 h-6 text-accent" />
+                  <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <area.icon className="w-6 h-6 text-purple-600" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold text-lg mb-2">{area.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <h3 className="font-bold text-lg mb-2 text-slate-800">{area.title}</h3>
+                    <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
                       {area.description}
                     </p>
                   </div>
@@ -207,15 +214,16 @@ export default function MinistryAreas() {
               transition={{ duration: 0.6 }}
               className="flex justify-center mb-8"
             >
-              <div className="w-56 h-56 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-2xl">
-                <div className="text-center text-white p-6">
-                  <p className="text-sm font-semibold mb-2">부다페스트한인선교교회</p>
+              <div className="w-56 h-56 rounded-full bg-gradient-to-br from-sky-500 to-purple-600 flex items-center justify-center shadow-2xl relative">
+                <div className="text-center text-white p-6 z-10">
+                  <p className="text-sm font-semibold mb-2 opacity-90">부다페스트한인선교교회</p>
                   <p className="text-base font-bold leading-tight">
                     예배가 중심이 된
                     <br />
                     선교적인 교회
                   </p>
                 </div>
+                <div className="absolute inset-0 rounded-full bg-sky-500/30 animate-ping" />
               </div>
             </motion.div>
 
@@ -228,21 +236,22 @@ export default function MinistryAreas() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: false, amount: 0.3 }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className="p-6 bg-white rounded-xl shadow-md border border-primary/10"
+                  className={`p-6 bg-white/60 backdrop-blur-md rounded-xl shadow-md border ${area.position === 'left' ? 'border-sky-100' : 'border-purple-100'
+                    }`}
                 >
                   <div className="flex items-start gap-4">
                     <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${area.position === 'left' ? 'bg-primary/10' : 'bg-accent/10'
+                      className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${area.position === 'left' ? 'bg-sky-100' : 'bg-purple-100'
                         }`}
                     >
                       <area.icon
-                        className={`w-6 h-6 ${area.position === 'left' ? 'text-primary' : 'text-accent'
+                        className={`w-6 h-6 ${area.position === 'left' ? 'text-sky-600' : 'text-purple-600'
                           }`}
                       />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-bold text-base mb-2">{area.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
+                      <h3 className="font-bold text-base mb-2 text-slate-800">{area.title}</h3>
+                      <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
                         {area.description}
                       </p>
                     </div>

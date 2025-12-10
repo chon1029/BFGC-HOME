@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge'
  */
 export default function MissionStatement() {
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="py-8 md:py-12 bg-background">
       <Container>
         {/* 섹션 헤더 */}
         <motion.div
@@ -23,12 +23,12 @@ export default function MissionStatement() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.3 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
-          <Badge variant="outline" className="mb-4 text-base px-6 py-2">
-            <span className="text-2xl font-bold mr-2">01</span>
-            시명선언
-          </Badge>
+          <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-gradient-to-r from-sky-500/10 to-purple-500/10 backdrop-blur-md border border-sky-500/20 shadow-lg mb-4">
+            <span className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-purple-600 bg-clip-text text-transparent">01</span>
+            <span className="text-base font-bold text-slate-800 dark:text-slate-200">사명선언</span>
+          </div>
           <p className="text-sm text-muted-foreground">부다페스트한인선교교회</p>
         </motion.div>
 
@@ -40,43 +40,24 @@ export default function MissionStatement() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="max-w-5xl mx-auto"
         >
-          <div className="relative bg-gradient-to-br from-primary/5 via-background to-accent/5 rounded-2xl overflow-hidden shadow-xl border border-primary/10">
-            {/* 배경 이미지 (선택적) */}
-            <div className="absolute inset-0 opacity-5">
-              <OptimizedImage
-                src="/images/vision/mission-statement.png"
-                alt="시명선언 배경"
-                fill
-                objectFit="cover"
-              />
-            </div>
-
+          <div className="relative rounded-2xl overflow-hidden bg-white/50 backdrop-blur-sm border border-sky-100/50 shadow-xl">
             <div className="relative z-10 p-8 md:p-12 space-y-8">
               {/* 성경 구절 */}
               <div className="text-center">
                 <div className="inline-block">
-                  <div className="relative">
-                    <OptimizedImage
-                      src="/images/vision/mission-statement-title.png"
-                      alt="누가복음 21:35-36"
-                      width={200}
-                      height={60}
-                      className="mx-auto mb-4"
-                    />
-                  </div>
-                  <p className="text-xl md:text-2xl font-bold text-primary">
+                  <p className="text-xl md:text-2xl font-bold text-sky-600 dark:text-sky-400 mb-2">
                     누가복음 21:35-36
                   </p>
                 </div>
               </div>
 
               {/* 구분선 */}
-              <div className="w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-sky-500/30 to-transparent" />
 
               {/* 메인 메시지 */}
               <div className="text-center space-y-4">
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-relaxed">
-                  <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-relaxed drop-shadow-lg">
+                  <span className="bg-gradient-to-r from-sky-600 via-purple-600 to-sky-600 bg-clip-text text-transparent ">
                     예수님의 재림을 준비하는 거룩한 성도
                     <br className="hidden md:block" />
                     세상을 변화시키는 실력 있는 믿음의 공동체

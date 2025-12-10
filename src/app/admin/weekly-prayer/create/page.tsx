@@ -77,29 +77,37 @@ export default function CreateWeeklyPrayerPage() {
                 .toLowerCase()
                 .replace(/[^a-z0-9가-힣\s-]/g, '')
                 .replace(/\s+/g, '-')
-                .substring(0, 96)
+                .substring(0, 96) || `prayer-${Date.now()}`
 
-            const doc = {
-                _type: 'weeklyPrayer',
+            const payload = {
                 title,
-                slug: {
-                    _type: 'slug',
-                    current: slug || `prayer-${Date.now()}`,
-                },
+                slug,
                 weekStartDate,
                 weekEndDate,
                 communityConfession,
                 dailyPrayers,
                 isPublished,
-                publishedAt: isPublished ? new Date().toISOString() : undefined,
             }
 
-            await client.create(doc)
+            // API 호출 (서버 사이드에서 처리)
+            const response = await fetch('/api/weekly-prayer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.message || '저장에 실패했습니다.')
+            }
+
             alert('주간기도문이 성공적으로 저장되었습니다!')
             router.push('/admin/weekly-prayer')
         } catch (error) {
             console.error('Failed to save:', error)
-            alert('저장에 실패했습니다. 다시 시도해주세요.')
+            alert('저장에 실패했습니다. 관리자에게 문의해주세요.')
         } finally {
             setLoading(false)
         }

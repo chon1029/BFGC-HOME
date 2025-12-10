@@ -5,6 +5,7 @@ import NewcomerSection from '@/components/sections/NewcomerSection'
 import LatestSermonSection from '@/components/sections/LatestSermonSection'
 import CommunityHighlightsSection from '@/components/sections/CommunityHighlightsSection'
 import FeatureCardsSection from '@/components/sections/FeatureCardsSection'
+import ScrollToTop from '@/components/ui/ScrollToTop'
 
 export default function Home() {
   return (
@@ -20,6 +21,8 @@ export default function Home() {
         <CommunityHighlightsSection />
         <FeatureCardsSection />
       </main>
+
+      <ScrollToTop />
     </>
   )
 }

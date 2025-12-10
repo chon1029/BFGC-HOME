@@ -1,118 +1,286 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import Image from 'next/image'
+import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, EffectFade, Navigation } from 'swiper/modules';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react';
+import type { Swiper as SwiperType } from 'swiper';
+
+// Swiper CSS
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import 'swiper/css/navigation';
+
+// 슬라이드 데이터
+const SLIDES = [
+  {
+    id: 1,
+    subtitle: "Vision 2025",
+    title: "2025 표어",
+    description: "이 땅위에 세워진 교회는 예수님의 영광스러운 재림의 때까지\n그 사명을 다해야 합니다. 우리 부다페스트한인선교교회는 '지속가능한 교회'로 세워지기 위해 다음세대를 세우고\n뜨겁게 헌신하는 공동체 입니다.",
+    bgImage: "/images/carousel/slogan-bg.png",
+    thumbnail: "/images/carousel/slogan.png",
+  },
+  {
+    id: 2,
+    subtitle: "Worship",
+    title: "예배",
+    description: "예배는 하나님의 백성들이 세상을 향해 '자기 정체성'을 분명하게 드러내는 것입니다. 우리 교회는 하나님의 강력한 임재를 사모하며 '영과 진리로 충만한' 예배에 헌신된 공동체 입니다.",
+    bgImage: "/images/carousel/worship-bg.jpg",
+    thumbnail: "/images/carousel/worship.jpg",
+  },
+  {
+    id: 3,
+    subtitle: "Mission",
+    title: "선교",
+    description: "교회의 사명은 '천하 만민에게 복음을 전파하는 것'입니다.\n비록 세계를 누비며 복음을 증거하지 못하지만 \n이 땅 헝가리만은 우리의 책임임을 고백하며 \n복음의 증인의 사명을 다하기 위해 헌신된 공동체 입니다.",
+    bgImage: "/images/carousel/mission-bg.jpg",
+    thumbnail: "/images/carousel/mission.jpg",
+  },
+  {
+    id: 4,
+    subtitle: "Discipleship",
+    title: "양육",
+    description: "미래세대의 희망인 우리 아이들에게 \n우리 부다페스트한인선교교회는 단순한 지식을 전달하는 곳이 아니라 전인격적인 양육을 통해 바르고 정직한 믿음의 사람으로 세우기 위해 헌신하는 공동체 입니다.",
+    bgImage: "/images/carousel/nurturing-bg.jpg",
+    thumbnail: "/images/carousel/nurturing.jpg",
+  },
+  {
+    id: 5,
+    subtitle: "Healing",
+    title: "치유",
+    description: "의학의 발달로 치료하지 못하는 질병이 거의 사라지고 있지만 내면의 질병은 점점 더 깊어지고 확대되고 있습니다. \n우리 부다페스트한인선교교회는 \n상한 심령을 치유하는 은혜의 공동체 입니다.",
+    bgImage: "/images/carousel/healing-bg.jpg",
+    thumbnail: "/images/carousel/healing.jpg",
+  },
+  {
+    id: 6,
+    subtitle: "Fellowship",
+    title: "교제",
+    description: "개인주의가 만연하여 비인간화가 심화되고 있는 때에 \n우리 부다페스트한인선교교회는 모든 세대를 향한 \n선한 이웃이 되어 지역사회를 섬기며 삶을 나누기 위해 \n활짝 열려 있는 희망의 공동체 입니다.",
+    bgImage: "/images/carousel/fellowship-bg.jpg",
+    thumbnail: "/images/carousel/fellowship.jpg",
+  },
+];
 
 export default function HeroSection() {
-  const [videoLoaded, setVideoLoaded] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [bgSwiper, setBgSwiper] = useState<SwiperType | null>(null);
+  const [thumbSwiper, setThumbSwiper] = useState<SwiperType | null>(null);
 
-  // 스크롤 핸들러
-  const scrollToContent = () => {
-    window.scrollTo({
-      top: window.innerHeight * 0.85, // 85vh 지점으로 이동
-      behavior: 'smooth'
-    })
-  }
+  // 수동 싱크 제어 (Thumb -> BG)
+  // 썸네일이 바뀌면 배경도 바꾼다. (Controller 모듈 대신 사용)
+  const handleSlideChange = (swiper: SwiperType) => {
+    const index = swiper.realIndex;
+    setActiveIndex(index);
+    if (bgSwiper) {
+      bgSwiper.slideToLoop(index);
+    }
+  };
+
+  // 텍스트 애니메이션 설정
+  const textVariants = {
+    hidden: { opacity: 0, y: 30, filter: 'blur(10px)' },
+    visible: (custom: number) => ({
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      transition: {
+        delay: custom * 0.1,
+        duration: 1.0,
+        ease: "easeInOut",
+      },
+    }),
+    exit: { opacity: 0, y: -20, filter: 'blur(5px)', transition: { duration: 0.3 } }
+  };
 
   return (
-    <section className="relative h-[85vh] w-full overflow-hidden bg-black">
-      {/* 배경 레이어 그룹 */}
+    <section className="relative w-full h-screen overflow-hidden bg-black text-white">
+
+      {/* 1. 배경 이미지 슬라이더 (Swiper Effect Fade) */}
       <div className="absolute inset-0 z-0">
-        {/* 1. 유튜브 영상 (iframe) - 페이드 인 효과 */}
-        <div className={`absolute inset-0 transition-opacity duration-2000 ease-in-out ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh]">
-            <iframe
-              src="https://www.youtube.com/embed/72T3JqNmaJ8?autoplay=1&mute=1&controls=0&loop=1&playlist=72T3JqNmaJ8&playsinline=1&rel=0&showinfo=0&modestbranding=1"
-              className="w-full h-full pointer-events-none"
-              allow="autoplay; encrypted-media"
-              onLoad={() => setTimeout(() => setVideoLoaded(true), 500)}
-              style={{ border: 'none', objectFit: 'cover' }}
-            />
-          </div>
-        </div>
+        <Swiper
+          modules={[EffectFade]}
+          effect="fade"
+          onSwiper={setBgSwiper}
+          allowTouchMove={false} // 배경 터치 금지
+          loop={true}
+          className="w-full h-full"
+        >
+          {SLIDES.map((slide, index) => (
+            <SwiperSlide key={slide.id} className="relative w-full h-full">
+              {/* 배경 이미지 */}
+              <div className="absolute inset-0 w-full h-full">
+                <Image
+                  src={slide.bgImage}
+                  alt={slide.title}
+                  fill
+                  priority={index === 0}
+                  className="object-cover"
+                  sizes="100vw"
+                />
+              </div>
 
-        {/* 2. 그라데이션 오버레이 (가독성 확보) */}
-        <div className="absolute inset-0 z-20 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none" />
+              {/* 오버레이 (가독성 확보) */}
+              <div className="absolute inset-0 bg-black/40 z-10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent z-10" />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
 
-      {/* 콘텐츠 */}
-      <div className="relative z-30 h-full flex flex-col items-center justify-center text-center px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="max-w-5xl mx-auto space-y-8"
-        >
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight leading-tight drop-shadow-xl"
-            style={{ textShadow: '6px 6px 8px rgba(0,0,0,0.6)' }}>
-            예배와 선교에<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400 filter brightness-12 drop-shadow-[4px_4px_6px_rgba(0,0,0,0.8)]"
-              style={{ textShadow: 'none' }}
+      {/* 2. 메인 컨텐츠 (좌측 텍스트) */}
+      <div className="relative z-20 container mx-auto px-6 h-full flex flex-col justify-center pb-20 lg:pb-0 lg:justify-center">
+        <div className="max-w-2xl lg:ml-10">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeIndex}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="space-y-6"
             >
-              헌신된 교회
-            </span>
-          </h1>
-
-          <div className="space-y-2 drop-shadow-xl" style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.8)' }}>
-            <p className="text-xl md:text-3xl text-white font-bold">
-              부다페스트한인선교교회에 오신 것을 환영합니다.
-            </p>
-            <p className="text-lg md:text-2xl text-white/90 font-medium">
-              하나님의 사랑을 전하며 열방을 품는 믿음의 공동체입니다.
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
-            {/* 1. 예배 시간 안내 버튼 */}
-            <div className="relative group rounded-full">
-              {/* 호버 시 나타나는 그라데이션 테두리 (배경) */}
-              <div className="absolute -inset-[2px] rounded-full bg-gradient-to-r from-sky-400 to-violet-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-[1px]" />
-
-              <Button
-                size="lg"
-                className="relative bg-white text-black hover:bg-black hover:text-white text-lg px-8 py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 font-bold border-2 border-transparent"
+              {/* Subtitle */}
+              <motion.div
+                variants={textVariants}
+                custom={0}
+                className="flex items-center space-x-4 text-yellow-400 tracking-[0.3em] uppercase font-bold text-sm md:text-base"
+                style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
               >
-                예배 시간 안내
-              </Button>
-            </div>
+                <span className="w-10 h-[2px] bg-yellow-400 inline-block"></span>
+                <span>{SLIDES[activeIndex].subtitle}</span>
+              </motion.div>
 
-            {/* 2. 새가족 등록하기 버튼 */}
-            <div className="relative group rounded-full">
-              {/* 호버 시 나타나는 그라데이션 테두리 (배경) */}
-              <div className="absolute -inset-[2px] rounded-full bg-gradient-to-r from-sky-400 to-violet-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-[1px]" />
-
-              <Button
-                size="lg"
-                variant="outline"
-                className="relative bg-black/40 backdrop-blur-md border-2 border-white text-white hover:bg-white hover:text-black hover:border-transparent text-lg px-8 py-6 rounded-full transition-all duration-300 hover:scale-105 font-bold shadow-xl"
+              {/* Main Title */}
+              <motion.h1
+                variants={textVariants}
+                custom={1}
+                className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tight text-white"
+                style={{ textShadow: '0 4px 20px rgba(0,0,0,0.6)' }}
               >
-                새가족 등록하기
-              </Button>
-            </div>
-          </div>
-        </motion.div>
+                {SLIDES[activeIndex].title}
+              </motion.h1>
 
-        {/* 스크롤 인디케이터 */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-10 left-1/2 transform -translate-x-1/2 cursor-pointer z-30"
-          onClick={scrollToContent}
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5 }}
-            className="flex flex-col items-center gap-2 drop-shadow-xl"
-          >
-            <span className="text-sm font-bold text-white uppercase tracking-widest" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>Scroll</span>
-            <ChevronDown className="w-6 h-6 text-white" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }} />
-          </motion.div>
-        </motion.div>
+              {/* Description */}
+              <motion.p
+                variants={textVariants}
+                custom={2}
+                className="text-gray-200 text-base md:text-xl leading-relaxed max-w-xl break-keep font-medium whitespace-pre-line"
+                style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}
+              >
+                {SLIDES[activeIndex].description}
+              </motion.p>
+
+              {/* Button */}
+              <motion.div variants={textVariants} custom={3} className="pt-8">
+                <button className="group relative px-8 py-3 bg-transparent overflow-hidden rounded-full border border-white/50 transition-all duration-300 hover:border-yellow-400 hover:text-black">
+                  <div className="absolute inset-0 w-full h-full bg-yellow-400 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[0.22,1,0.36,1]" />
+                  <div className="relative flex items-center space-x-3">
+                    <span className="uppercase tracking-widest text-sm font-bold">Discover More</span>
+                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </button>
+              </motion.div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
+
+      {/* 3. 우측 하단 카드 슬라이더 */}
+      <div className="absolute bottom-0 right-0 z-30 w-full lg:w-[55%] h-auto pl-4 lg:pl-0 overflow-visible flex items-end pb-8 lg:pb-12">
+        <Swiper
+          modules={[Navigation, Autoplay]}
+          onSwiper={setThumbSwiper}
+          onSlideChange={handleSlideChange}
+          spaceBetween={16}
+          slidesPerView={1.5}
+          centeredSlides={false}
+          breakpoints={{
+            640: { slidesPerView: 2.2, spaceBetween: 20 },
+            1024: { slidesPerView: 3.2, spaceBetween: 24 },
+            1400: { slidesPerView: 3.5, spaceBetween: 30 },
+          }}
+          grabCursor={true}
+          loop={true}
+          speed={800}
+          autoplay={{ delay: 5000, disableOnInteraction: false }}
+          className="!overflow-visible w-full pr-4 lg:pr-12"
+        >
+          {SLIDES.map((slide) => (
+            <SwiperSlide key={slide.id} className="!h-auto flex items-end group cursor-pointer">
+              {({ isActive }) => (
+                <div
+                  className={`relative w-full overflow-hidden rounded-xl transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] origin-bottom ${isActive
+                    ? 'h-[280px] lg:h-[380px] shadow-2xl shadow-black/60 ring-1 ring-white/40 z-10'
+                    : 'h-[160px] lg:h-[220px] opacity-70 hover:opacity-100 hover:h-[180px] lg:hover:h-[240px] z-0'
+                    }`}
+                >
+                  {/* 썸네일 이미지 */}
+                  <Image
+                    src={slide.thumbnail}
+                    alt={slide.title}
+                    fill
+                    className={`object-cover transition-transform duration-1000 ${isActive ? 'scale-110' : 'scale-100 group-hover:scale-105'
+                      }`}
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                  />
+
+                  {/* 그라데이션 오버레이 */}
+                  <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent transition-opacity duration-500 ${isActive ? 'opacity-60' : 'opacity-40'
+                    }`} />
+
+                  {/* 텍스트 정보 */}
+                  <div className="absolute bottom-0 left-0 w-full p-4 lg:p-6">
+                    <p className={`text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1 transition-all duration-500 delay-100 ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+                      }`}>
+                      {slide.subtitle}
+                    </p>
+                    <h3 className={`text-white font-bold leading-tight transition-all duration-500 ${isActive ? 'text-xl lg:text-2xl' : 'text-base lg:text-lg'
+                      }`}
+                      style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}
+                    >
+                      {slide.title}
+                    </h3>
+                  </div>
+
+                  {/* 활성화 상태 표시 바 */}
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-white/10">
+                    <div
+                      className={`h-full bg-yellow-400 transition-all duration-[5000ms] linear ${isActive ? 'w-full' : 'w-0'
+                        }`}
+                    />
+                  </div>
+                </div>
+              )}
+            </SwiperSlide>
+          ))}
+
+          {/* 네비게이션 버튼 */}
+          <div className="absolute -top-16 left-0 flex space-x-3 z-40 pl-1">
+            <button
+              className="p-3 bg-white/10 hover:bg-white text-white hover:text-black rounded-full backdrop-blur-md transition-all duration-300 border border-white/20 hover:scale-110"
+              onClick={() => thumbSwiper?.slidePrev()}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <button
+              className="p-3 bg-white/10 hover:bg-white text-white hover:text-black rounded-full backdrop-blur-md transition-all duration-300 border border-white/20 hover:scale-110"
+              onClick={() => thumbSwiper?.slideNext()}
+            >
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
+        </Swiper>
+      </div>
+
+      {/* 슬라이드 번호 표시 */}
+      <div className="absolute bottom-8 left-8 lg:left-16 z-20 text-white/20 font-black text-6xl lg:text-9xl leading-none select-none hidden md:block pointer-events-none">
+        0{activeIndex + 1}
+      </div>
+
     </section>
-  )
+  );
 }

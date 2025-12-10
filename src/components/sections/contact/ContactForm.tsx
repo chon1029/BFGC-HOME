@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Mail, MapPin, Clock, Send, Loader2, CheckCircle2 } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Mail, MapPin, Clock, Send, Loader2, CheckCircle2, Copy, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -18,6 +19,7 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { Card, CardContent } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
 
 const contactSchema = z.object({
     name: z.string().min(2, '이름을 입력해주세요.'),
@@ -32,6 +34,7 @@ type ContactFormValues = z.infer<typeof contactSchema>
 export default function ContactForm() {
     const [isLoading, setIsLoading] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
+    const [copied, setCopied] = useState(false)
 
     const form = useForm<ContactFormValues>({
         resolver: zodResolver(contactSchema),
@@ -75,205 +78,291 @@ export default function ContactForm() {
         }
     }
 
+    const copyEmail = () => {
+        navigator.clipboard.writeText('chon1029@gmail.com')
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+    }
+
     return (
         <PageLayout breadcrumbs={[]}>
-            <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 dark:from-slate-950 dark:via-blue-950 dark:to-slate-950 py-12 pb-16">
-                <div className="container mx-auto px-4">
+            <div className="relative min-h-screen bg-slate-50 dark:bg-slate-950 py-20 overflow-hidden">
+
+                {/* Background Animations */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <motion.div
+                        animate={{
+                            scale: [1, 1.2, 1],
+                            rotate: [0, 90, 0],
+                            opacity: [0.3, 0.5, 0.3]
+                        }}
+                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                        className="absolute -top-[20%] -right-[10%] w-[800px] h-[800px] rounded-full bg-gradient-to-br from-sky-200/20 to-blue-200/20 blur-3xl"
+                    />
+                    <motion.div
+                        animate={{
+                            scale: [1, 1.1, 1],
+                            x: [0, -50, 0],
+                            opacity: [0.3, 0.5, 0.3]
+                        }}
+                        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute -bottom-[10%] -left-[10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-purple-200/20 to-pink-200/20 blur-3xl"
+                    />
+                </div>
+
+                <div className="container mx-auto px-4 relative z-10">
                     {/* Header */}
-                    <div className="text-center mb-16">
-                        <h1 className="text-5xl font-bold text-slate-900 dark:text-slate-100 mb-4">
-                            BFGC에 문의해주세요
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: false }}
+                        transition={{ duration: 0.8 }}
+                        className="text-center mb-16 space-y-4"
+                    >
+                        <h1 className="text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight">
+                            Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">Touch</span>
                         </h1>
-                        <p className="text-lg text-slate-600 dark:text-slate-400">
-                            문의사항이 있으시면 언제든지 연락주세요.<br />
-                            빠른 시일 내에 답변드리겠습니다.
+                        <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                            부다페스트 한인선교교회는 언제나 여러분을 환영합니다.<br />
+                            궁금한 점이 있으시다면 언제든 편하게 문의해주세요.
                         </p>
-                    </div>
+                    </motion.div>
 
-                    <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-                        {/* Left: Church Info */}
+                    <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+
+                        {/* Left Column: Info & Map */}
                         <div className="space-y-6">
-                            <Card className="bg-gradient-to-br from-sky-500 to-blue-600 border-0 shadow-2xl overflow-hidden">
-                                <CardContent className="p-8 text-white">
-                                    <h2 className="text-3xl font-bold mb-8">교회 정보</h2>
 
-                                    {/* Email */}
-                                    <div className="flex items-start gap-4 mb-6 group">
-                                        <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/30 transition-all duration-300">
-                                            <Mail className="w-6 h-6" />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold text-lg mb-1">전자 문의</h3>
-                                            <a
-                                                href="mailto:chon1029@gmail.com"
-                                                className="text-white/90 hover:text-white transition-colors"
+                            {/* Info Card */}
+                            <motion.div
+                                initial={{ opacity: 0, x: -50 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: false }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                            >
+                                <Card className="bg-gradient-to-br from-slate-900 to-slate-800 border-0 shadow-2xl overflow-hidden group">
+                                    <CardContent className="p-8 md:p-10 text-white relative">
+                                        {/* Decorative Circle */}
+                                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-700" />
+
+                                        <h2 className="text-3xl font-bold mb-8 relative z-10">Contact Info</h2>
+
+                                        <div className="space-y-8 relative z-10">
+                                            {/* Email */}
+                                            <motion.div
+                                                whileHover={{ x: 10 }}
+                                                className="flex items-start gap-5 cursor-pointer"
+                                                onClick={copyEmail}
                                             >
-                                                chon1029@gmail.com
-                                            </a>
-                                        </div>
-                                    </div>
+                                                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10 group-hover:bg-sky-500/20 group-hover:border-sky-500/50 transition-all duration-300">
+                                                    <Mail className="w-6 h-6 text-sky-400" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-bold text-lg mb-1 text-slate-200">Email</h3>
+                                                    <div className="flex items-center gap-2 group/email">
+                                                        <span className="text-white/90 group-hover/email:text-sky-400 transition-colors">chon1029@gmail.com</span>
+                                                        {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4 opacity-0 group-hover/email:opacity-100 transition-opacity" />}
+                                                    </div>
+                                                    <p className="text-xs text-slate-400 mt-1">클릭하여 복사하기</p>
+                                                </div>
+                                            </motion.div>
 
-                                    {/* Address */}
-                                    <div className="flex items-start gap-4 mb-6 group">
-                                        <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/30 transition-all duration-300">
-                                            <MapPin className="w-6 h-6" />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold text-lg mb-1">주소</h3>
-                                            <p className="text-white/90">부다페스트한인교회</p>
-                                            <p className="text-white/90">1073 Budapest, Osvát utca 16</p>
-                                        </div>
-                                    </div>
+                                            {/* Address */}
+                                            <motion.div
+                                                whileHover={{ x: 10 }}
+                                                className="flex items-start gap-5"
+                                            >
+                                                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10 group-hover:bg-purple-500/20 group-hover:border-purple-500/50 transition-all duration-300">
+                                                    <MapPin className="w-6 h-6 text-purple-400" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-bold text-lg mb-1 text-slate-200">Address</h3>
+                                                    <p className="text-white/90">1073 Budapest, Osvát utca 16</p>
+                                                    <p className="text-sm text-slate-400 mt-1">부다페스트 한인선교교회</p>
+                                                </div>
+                                            </motion.div>
 
-                                    {/* Service Time */}
-                                    <div className="flex items-start gap-4 group">
-                                        <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/30 transition-all duration-300">
-                                            <Clock className="w-6 h-6" />
+                                            {/* Time */}
+                                            <motion.div
+                                                whileHover={{ x: 10 }}
+                                                className="flex items-start gap-5"
+                                            >
+                                                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10 group-hover:bg-orange-500/20 group-hover:border-orange-500/50 transition-all duration-300">
+                                                    <Clock className="w-6 h-6 text-orange-400" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-bold text-lg mb-1 text-slate-200">Service Time</h3>
+                                                    <p className="text-white/90">주일 오전 11:00 (본당)</p>
+                                                    <p className="text-sm text-slate-400 mt-1">수요예배 / 금요기도회 / 새벽기도회</p>
+                                                </div>
+                                            </motion.div>
                                         </div>
-                                        <div>
-                                            <h3 className="font-semibold text-lg mb-1">예배 시간</h3>
-                                            <p className="text-white/90">현재가 확인되면 안내드리겠습니다</p>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
 
-                            {/* Google Map */}
-                            <Card className="overflow-hidden shadow-xl">
-                                <CardContent className="p-0">
-                                    <iframe
-                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2695.513751466512!2d19.0701364!3d47.4993852!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741dc66ddb89605%3A0xd588a3077bb8a1df!2z67aA64uk7Y6Y7Iqk7Yq4IO2VnOyduOyEoOq1kOq1kO2ajA!5e0!3m2!1sko!2shu!4v1765190631425!5m2!1sko!2shu"
-                                        width="100%"
-                                        height="300"
-                                        style={{ border: 0 }}
-                                        allowFullScreen
-                                        loading="lazy"
-                                        referrerPolicy="no-referrer-when-downgrade"
-                                        className="grayscale hover:grayscale-0 transition-all duration-500"
-                                    ></iframe>
-                                </CardContent>
-                            </Card>
+                            {/* Map Card */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: false }}
+                                transition={{ duration: 0.6, delay: 0.4 }}
+                            >
+                                <Card className="overflow-hidden shadow-xl border-0 ring-1 ring-slate-200 dark:ring-slate-800 group">
+                                    <div className="relative h-[300px] w-full overflow-hidden">
+                                        <iframe
+                                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2695.513751466512!2d19.0701364!3d47.4993852!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741dc66ddb89605%3A0xd588a3077bb8a1df!2z67aA64uk7Y6Y7Iqk7Yq4IO2VnOyduOyEoOq1kOq1kO2ajA!5e0!3m2!1sko!2shu!4v1765190631425!5m2!1sko!2shu"
+                                            width="100%"
+                                            height="100%"
+                                            style={{ border: 0 }}
+                                            allowFullScreen
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                            className="grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105"
+                                        ></iframe>
+                                        <div className="absolute inset-0 pointer-events-none border-4 border-white/0 group-hover:border-white/20 transition-colors duration-300" />
+                                    </div>
+                                </Card>
+                            </motion.div>
                         </div>
 
-                        {/* Right: Contact Form */}
-                        <Card className="shadow-2xl border-slate-200 dark:border-slate-800">
-                            <CardContent className="p-8">
-                                {isSuccess ? (
-                                    <div className="py-12 text-center">
-                                        <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                                            <CheckCircle2 className="w-10 h-10 text-green-600 dark:text-green-400" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
-                                            문의가 전송되었습니다!
-                                        </h3>
-                                        <p className="text-slate-600 dark:text-slate-400">
-                                            빠른 시일 내에 답변드리겠습니다.
-                                        </p>
-                                    </div>
-                                ) : (
-                                    <Form {...form}>
-                                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                                            {/* Name & Email */}
-                                            <div className="grid md:grid-cols-2 gap-4">
-                                                <FormField
-                                                    control={form.control}
-                                                    name="name"
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>이름 *</FormLabel>
-                                                            <FormControl>
-                                                                <Input placeholder="홍길동" {...field} className="h-12" />
-                                                            </FormControl>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                                <FormField
-                                                    control={form.control}
-                                                    name="email"
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>이메일 *</FormLabel>
-                                                            <FormControl>
-                                                                <Input type="email" placeholder="example@email.com" {...field} className="h-12" />
-                                                            </FormControl>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                            </div>
-
-                                            {/* Phone */}
-                                            <FormField
-                                                control={form.control}
-                                                name="phone"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>연락처</FormLabel>
-                                                        <FormControl>
-                                                            <Input placeholder="010-1234-5678 (선택사항)" {...field} className="h-12" />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-
-                                            {/* Subject */}
-                                            <FormField
-                                                control={form.control}
-                                                name="subject"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>제목 *</FormLabel>
-                                                        <FormControl>
-                                                            <Input placeholder="문의 제목을 입력하세요" {...field} className="h-12" />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-
-                                            {/* Message */}
-                                            <FormField
-                                                control={form.control}
-                                                name="message"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>문의내용 *</FormLabel>
-                                                        <FormControl>
-                                                            <Textarea
-                                                                placeholder="문의하실 내용을 자세히 적어주세요."
-                                                                className="resize-none h-32"
-                                                                {...field}
-                                                            />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-
-                                            <Button
-                                                type="submit"
-                                                disabled={isLoading}
-                                                className="w-full h-12 bg-sky-600 hover:bg-sky-700 text-white text-lg font-semibold"
+                        {/* Right Column: Form */}
+                        <motion.div
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: false }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                        >
+                            <Card className="h-full shadow-2xl border-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl ring-1 ring-slate-200 dark:ring-slate-800">
+                                <CardContent className="p-8 md:p-10">
+                                    {isSuccess ? (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="h-full flex flex-col items-center justify-center text-center py-20"
+                                        >
+                                            <motion.div
+                                                initial={{ scale: 0 }}
+                                                animate={{ scale: 1 }}
+                                                transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                                                className="w-24 h-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-6"
                                             >
-                                                {isLoading ? (
-                                                    <>
-                                                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                                        전송 중...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Send className="mr-2 h-5 w-5" />
-                                                        문의 보내기
-                                                    </>
-                                                )}
-                                            </Button>
-                                        </form>
-                                    </Form>
-                                )}
-                            </CardContent>
-                        </Card>
+                                                <CheckCircle2 className="w-12 h-12 text-green-600 dark:text-green-400" />
+                                            </motion.div>
+                                            <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-3">
+                                                Thank You!
+                                            </h3>
+                                            <p className="text-lg text-slate-600 dark:text-slate-400">
+                                                문의가 성공적으로 전송되었습니다.<br />
+                                                빠른 시일 내에 답변 드리겠습니다.
+                                            </p>
+                                        </motion.div>
+                                    ) : (
+                                        <Form {...form}>
+                                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 h-full flex flex-col">
+                                                <div className="mb-2">
+                                                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Send a Message</h2>
+                                                    <p className="text-slate-500 dark:text-slate-400">작성해주신 내용은 관리자에게 이메일로 전송됩니다.</p>
+                                                </div>
+
+                                                <div className="grid md:grid-cols-2 gap-6">
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="name"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel className="text-slate-700 dark:text-slate-300 font-semibold">이름</FormLabel>
+                                                                <FormControl>
+                                                                    <Input placeholder="홍길동" {...field} className="h-12 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-sky-500 transition-all" />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="email"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel className="text-slate-700 dark:text-slate-300 font-semibold">이메일</FormLabel>
+                                                                <FormControl>
+                                                                    <Input type="email" placeholder="example@email.com" {...field} className="h-12 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-sky-500 transition-all" />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </div>
+
+                                                <FormField
+                                                    control={form.control}
+                                                    name="phone"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-slate-700 dark:text-slate-300 font-semibold">연락처 (선택)</FormLabel>
+                                                            <FormControl>
+                                                                <Input placeholder="010-1234-5678" {...field} className="h-12 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-sky-500 transition-all" />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+
+                                                <FormField
+                                                    control={form.control}
+                                                    name="subject"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-slate-700 dark:text-slate-300 font-semibold">제목</FormLabel>
+                                                            <FormControl>
+                                                                <Input placeholder="문의 제목을 입력하세요" {...field} className="h-12 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-sky-500 transition-all" />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+
+                                                <FormField
+                                                    control={form.control}
+                                                    name="message"
+                                                    render={({ field }) => (
+                                                        <FormItem className="flex-1">
+                                                            <FormLabel className="text-slate-700 dark:text-slate-300 font-semibold">문의내용</FormLabel>
+                                                            <FormControl>
+                                                                <Textarea
+                                                                    placeholder="문의하실 내용을 자세히 적어주세요."
+                                                                    className="resize-none min-h-[150px] bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-sky-500 transition-all"
+                                                                    {...field}
+                                                                />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+
+                                                <Button
+                                                    type="submit"
+                                                    disabled={isLoading}
+                                                    className="w-full h-14 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white text-lg font-bold rounded-xl shadow-lg shadow-sky-500/30 hover:shadow-sky-500/50 transition-all duration-300 group"
+                                                >
+                                                    {isLoading ? (
+                                                        <>
+                                                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                                            전송 중...
+                                                        </>
+                                                    ) : (
+                                                        <span className="flex items-center gap-2">
+                                                            문의 보내기
+                                                            <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                                        </span>
+                                                    )}
+                                                </Button>
+                                            </form>
+                                        </Form>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        </motion.div>
                     </div>
                 </div>
             </div>

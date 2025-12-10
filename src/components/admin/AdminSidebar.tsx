@@ -34,7 +34,7 @@ const sidebarItems = [
     },
     {
         title: '설교 관리',
-        href: '/admin/sermons',
+        href: '/worship/sermons',
         icon: Video,
         variant: 'ghost',
     },
@@ -64,7 +64,7 @@ const sidebarItems = [
     },
     {
         title: '설정',
-        href: '/admin/settings',
+        href: '/settings',
         icon: Settings,
         variant: 'ghost',
     },

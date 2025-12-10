@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import { Menu, X, ChevronDown, User, LogOut, Settings } from 'lucide-react'
+import { Menu, X, ChevronDown, User, LogOut, Settings, LayoutDashboard } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSession, signOut } from 'next-auth/react'
 import { mainNavigation } from '@/lib/navigation'
@@ -45,6 +45,18 @@ export default function Header({ transparent = false }: HeaderProps) {
   // 모바일 메뉴 토글
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen)
   const closeMobileMenu = () => setMobileMenuOpen(false)
+
+  // 모바일 메뉴 토글 시 스크롤 잠금
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [mobileMenuOpen])
 
   return (
     <motion.header
@@ -208,16 +220,16 @@ export default function Header({ transparent = false }: HeaderProps) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild className="cursor-pointer">
-                  <Link href="/settings/profile" className="flex items-center w-full">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>프로필</span>
-                    <span className="ml-auto text-xs tracking-widest text-slate-500">⇧⌘P</span>
+                  <Link href="/admin" className="flex items-center w-full">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    <span>관리자 대시보드</span>
+                    <span className="ml-auto text-xs tracking-widest text-slate-500">⌘D</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="cursor-pointer">
-                  <Link href="/settings/account" className="flex items-center w-full">
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>설정</span>
+                  <Link href="/settings" className="flex items-center w-full">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>프로필 / 설정</span>
                     <span className="ml-auto text-xs tracking-widest text-slate-500">⌘S</span>
                   </Link>
                 </DropdownMenuItem>
@@ -257,11 +269,14 @@ export default function Header({ transparent = false }: HeaderProps) {
           )}
         </div>
 
-        {/* 모바일 메뉴 버튼 (항상 화이트) */}
+        {/* 모바일 메뉴 버튼 */}
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="lg:hidden p-2 rounded-full transition-colors text-white hover:bg-white/10"
+          className={cn(
+            "lg:hidden p-2 rounded-full transition-colors",
+            transparent ? "text-slate-900 hover:bg-slate-100" : "text-white hover:bg-white/10"
+          )}
           onClick={toggleMobileMenu}
         >
           {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -346,18 +361,28 @@ export default function Header({ transparent = false }: HeaderProps) {
                   ))}
                 </nav>
 
-                <div className="pt-8 border-t border-white/10">
+                <div className="pt-8 border-t border-white/10 space-y-3">
                   {session ? (
-                    <button
-                      onClick={() => {
-                        signOut()
-                        closeMobileMenu()
-                      }}
-                      className="flex items-center justify-center w-full py-4 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 font-bold text-lg transition-colors border border-red-500/20"
-                    >
-                      <LogOut className="mr-2 h-5 w-5" />
-                      로그아웃
-                    </button>
+                    <>
+                      <Link
+                        href="/admin"
+                        onClick={closeMobileMenu}
+                        className="flex items-center justify-center w-full py-4 rounded-xl bg-white/5 text-white hover:bg-white/10 font-bold text-lg transition-colors border border-white/10"
+                      >
+                        <LayoutDashboard className="mr-2 h-5 w-5" />
+                        관리자 대시보드
+                      </Link>
+                      <button
+                        onClick={() => {
+                          signOut()
+                          closeMobileMenu()
+                        }}
+                        className="flex items-center justify-center w-full py-4 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 font-bold text-lg transition-colors border border-red-500/20"
+                      >
+                        <LogOut className="mr-2 h-5 w-5" />
+                        로그아웃
+                      </button>
+                    </>
                   ) : (
                     <Link
                       href="/login"
