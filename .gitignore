@@ -16,3 +16,10 @@ yarn-error.log*
 .env.local
 .env.development.local
 .env.production.local
+
+# MCP Configuration (Optional, but recommended for local settings)
+.mcp.json
+
+# MCP 환경변수 스크립트 (API 키 포함 - 절대 커밋 금지!)
+setup-mcp-env.bat
+setup-mcp-env.sh

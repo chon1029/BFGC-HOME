@@ -50,7 +50,7 @@ const sidebarItems = [
         variant: 'ghost',
     },
     {
-        title: '설정',
+        title: '사이트 관리',
         href: '/admin/settings',
         icon: Settings,
         variant: 'ghost',
