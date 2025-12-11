@@ -9,22 +9,7 @@ import { Separator } from '@/components/ui/separator'
 import { Calendar, BookOpen, ArrowLeft, Share2, Heart, MessageCircle, User } from 'lucide-react'
 import { motion } from 'framer-motion'
 
-// Mock Data (실제로는 API로 가져와야 함)
-const DAILY_BREADS = [
-    {
-        id: '1',
-        date: '2024-04-02',
-        title: '하나님의 형상대로',
-        book: '창세기',
-        chapterVerse: '1:26-31',
-        keyVerse: '하나님이 자기 형상 곧 하나님의 형상대로 사람을 창조하시되 남자와 여자를 창조하시고',
-        content: `하나님이 이르시되 우리의 형상을 따라 우리의 모양대로 우리가 사람을 만들고 그들로 바다의 물고기와 하늘의 새와 가축과 온 땅과 땅에 기는 모든 것을 다스리게 하자 하시고 하나님이 자기 형상 곧 하나님의 형상대로 사람을 창조하시되 남자와 여자를 창조하시고 하나님이 그들에게 복을 주시며 하나님이 그들에게 이르시되 생육하고 번성하여 땅에 충만하라, 땅을 정복하라, 바다의 물고기와 하늘의 새와 땅에 움직이는 모든 생물을 다스리라 하시니라.`,
-        suggestion: `우리의 가치는 우리가 무엇을 소유했거나 성취했느냐에 달려있지 않습니다. 우리의 존재 자체가 하나님의 걸작품이기 때문입니다. 오늘 하루, 나 자신을 바라볼 때 세상의 기준이 아닌 하나님의 시선으로 바라보기를 소망합니다.`,
-        prayer: `사랑의 하나님, 저를 하나님의 형상대로 존귀하게 지어주셔서 감사합니다. 때로는 세상의 기준에 흔들려 제 가치를 잊어버릴 때가 있습니다. 오늘 하루, 제가 하나님의 자녀라는 정체성을 굳게 붙들고 살아가게 하옵소서. 예수님의 이름으로 기도합니다. 아멘.`,
-        author: '관리자'
-    },
-    // ... 다른 데이터들도 필요하다면 추가
-]
+import { MOCK_DAILY_BREADS } from '@/lib/mock/daily-bread-data'
 
 export default function DailyBreadDetailPage() {
     const params = useParams()
@@ -32,11 +17,18 @@ export default function DailyBreadDetailPage() {
     const id = params.id as string
 
     // 데이터 찾기
-    const bread = DAILY_BREADS.find(item => item.id === id)
+    const bread = MOCK_DAILY_BREADS.find(item => item._id === id)
 
     if (!bread) {
         return (
-            <PageLayout>
+            <PageLayout
+                sidebarMenu="worship"
+                breadcrumbs={[
+                    { label: 'Home', href: '/' },
+                    { label: '예배•양육', href: '/worship' },
+                    { label: '일용할 양식', href: '/worship/daily-bread' },
+                ]}
+            >
                 <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
                     <h2 className="text-2xl font-bold">묵상을 찾을 수 없습니다.</h2>
                     <Button onClick={() => router.back()}>돌아가기</Button>

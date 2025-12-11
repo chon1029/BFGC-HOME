@@ -9,22 +9,10 @@ import { Button } from '@/components/ui/button'
 import { Search, X, ZoomIn, Calendar, Layers, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { OptimizedImage } from '@/components/common/OptimizedImage'
 import { cn } from '@/lib/utils'
-import { client, urlFor } from '@/lib/sanity'
 import { GalleryUploadModal } from '@/components/sections/gallery/GalleryUploadModal'
-
-// ----------------------------------------------------------------------
-// Types
-// ----------------------------------------------------------------------
-
-interface GalleryItem {
-    _id: string
-    title: string
-    category: string
-    date: string
-    thumbnail: any
-    images: any[]
-    description?: string
-}
+import GalleryActionButtons from '@/components/sections/gallery/GalleryActionButtons'
+import { MOCK_GALLERY_ITEMS } from '@/lib/mock/gallery-data'
+import { GalleryItem } from '@/types/gallery'
 
 const CATEGORIES = ['전체', '예배', '친교', '행사', '다음세대', '선교']
 
@@ -41,30 +29,25 @@ export default function GalleryPage() {
     const [currentImageIndex, setCurrentImageIndex] = useState(0)
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
 
-    // Fetch Data from Sanity
-    const fetchGalleryItems = async () => {
-        try {
-            const query = `*[_type == "gallery"] | order(date desc) {
-        _id,
-        title,
-        category,
-        date,
-        thumbnail,
-        images,
-        description
-      }`
-            const data = await client.fetch(query)
-            setItems(data)
-        } catch (error) {
-            console.error('Failed to fetch gallery items:', error)
-        } finally {
-            setLoading(false)
-        }
-    }
+    // 관리자 여부 확인
+    const isAdmin = session?.user?.email === 'admin@bfgc.org'
 
     useEffect(() => {
-        fetchGalleryItems()
+        // Mock Data 로드
+        setItems(MOCK_GALLERY_ITEMS)
+        setLoading(false)
     }, [])
+
+    // 관리자 액션 핸들러
+    const handleEdit = (id: string) => {
+        // TODO: Sanity 수정 API 호출
+        alert(`앨범(ID: ${id})을 수정합니다. (Mock)`)
+    }
+
+    const handleDelete = (id: string) => {
+        // TODO: Sanity 삭제 API 호출
+        alert(`앨범(ID: ${id})이 삭제되었습니다. (Mock)`)
+    }
 
     const filteredItems = selectedCategory === '전체'
         ? items
@@ -203,9 +186,21 @@ export default function GalleryPage() {
                                     className="group relative aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500"
                                     onClick={() => openAlbum(item)}
                                 >
+                                    {/* 관리자 액션 버튼 (호버 시 표시) */}
+                                    {isAdmin && (
+                                        <div className="absolute top-2 right-2 z-30 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 rounded-md shadow-sm backdrop-blur-sm">
+                                            <GalleryActionButtons
+                                                galleryId={item._id}
+                                                galleryTitle={item.title}
+                                                onEdit={handleEdit}
+                                                onDelete={handleDelete}
+                                            />
+                                        </div>
+                                    )}
+
                                     {item.thumbnail && (
                                         <OptimizedImage
-                                            src={urlFor(item.thumbnail).url()}
+                                            src={item.thumbnail}
                                             alt={item.title}
                                             fill
                                             className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -285,7 +280,7 @@ export default function GalleryPage() {
                                     >
                                         {currentAlbumImages[currentImageIndex] && (
                                             <OptimizedImage
-                                                src={urlFor(currentAlbumImages[currentImageIndex]).url()}
+                                                src={currentAlbumImages[currentImageIndex]}
                                                 alt={`${selectedAlbum.title} - ${currentImageIndex + 1}`}
                                                 fill
                                                 className="object-contain"
@@ -340,7 +335,7 @@ export default function GalleryPage() {
             <GalleryUploadModal
                 open={isUploadModalOpen}
                 onOpenChange={setIsUploadModalOpen}
-                onSuccess={fetchGalleryItems}
+                onSuccess={() => { }} // Mock에서는 아무 동작 안 함
             />
         </PageLayout>
     )

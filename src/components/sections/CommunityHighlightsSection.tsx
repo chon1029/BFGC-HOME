@@ -1,16 +1,19 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ArrowRight, Heart, Calendar, Camera, FileText, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { OfferingModal } from '@/components/modals/OfferingModal'
 
 export default function CommunityHighlightsSection() {
     const ref = useRef(null)
     const isInView = useInView(ref, { once: false, margin: "-100px" })
+    const [isOfferingModalOpen, setIsOfferingModalOpen] = useState(false)
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -86,7 +89,10 @@ export default function CommunityHighlightsSection() {
 
                     {/* Column 2 Top: Online Offering */}
                     <motion.div className="md:col-span-1 md:row-span-1" variants={itemVariants} custom={1}>
-                        <Card className="h-full bg-white dark:bg-slate-800 border-none shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
+                        <Card
+                            className="h-full bg-white dark:bg-slate-800 border-none shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
+                            onClick={() => setIsOfferingModalOpen(true)}
+                        >
                             <CardContent className="p-6 flex flex-col h-full">
                                 <div className="flex items-center justify-center gap-2 mb-4 text-orange-500">
                                     <Heart className="h-5 w-5 fill-orange-500" />
@@ -130,37 +136,41 @@ export default function CommunityHighlightsSection() {
 
                     {/* Column 2 Bottom: Bulletin Download */}
                     <motion.div className="md:col-span-1 md:row-span-1" variants={itemVariants} custom={1}>
-                        <Card className="h-full bg-slate-100 dark:bg-slate-800 border-none shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
-                            <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
-                                <div className="h-12 w-12 rounded-full bg-white dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 mb-4 group-hover:scale-110 transition-transform shadow-sm">
-                                    <FileText className="h-6 w-6" />
-                                </div>
-                                <div className="text-lg font-bold text-slate-900 dark:text-white mb-1">주보 다운로드</div>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">2025년 12월 첫째주</p>
-                                <Badge variant="secondary" className="bg-white/50 hover:bg-white text-xs">
-                                    <Download className="h-3 w-3 mr-1" /> PDF 받기
-                                </Badge>
-                            </CardContent>
-                        </Card>
+                        <Link href="/life/bulletin">
+                            <Card className="h-full bg-slate-100 dark:bg-slate-800 border-none shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
+                                <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
+                                    <div className="h-12 w-12 rounded-full bg-white dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 mb-4 group-hover:scale-110 transition-transform shadow-sm">
+                                        <FileText className="h-6 w-6" />
+                                    </div>
+                                    <div className="text-lg font-bold text-slate-900 dark:text-white mb-1">주보 다운로드</div>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">2025년 12월 첫째주</p>
+                                    <Badge variant="secondary" className="bg-white/50 hover:bg-white text-xs">
+                                        <Download className="h-3 w-3 mr-1" /> PDF 받기
+                                    </Badge>
+                                </CardContent>
+                            </Card>
+                        </Link>
                     </motion.div>
 
                     {/* Column 3 Bottom: Gallery */}
                     <motion.div className="md:col-span-1 md:row-span-1" variants={itemVariants} custom={2}>
-                        <Card className="h-full bg-slate-900 dark:bg-slate-800 text-white border-none shadow-sm group cursor-pointer overflow-hidden">
-                            <CardContent className="p-0 h-full relative">
-                                <Image
-                                    src="/images/community_gathering.png"
-                                    alt="Gallery Background"
-                                    fill
-                                    className="object-cover opacity-50 group-hover:opacity-30 transition-opacity scale-150 blur-sm"
-                                />
-                                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 z-10">
-                                    <Camera className="h-8 w-8 mb-3 text-white/80 group-hover:scale-110 transition-transform" />
-                                    <h3 className="font-bold text-lg text-center">갤러리 더보기</h3>
-                                    <p className="text-xs text-white/60 mt-1">지난 사역 사진들</p>
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <Link href="/life/gallery">
+                            <Card className="h-full bg-slate-900 dark:bg-slate-800 text-white border-none shadow-sm group cursor-pointer overflow-hidden">
+                                <CardContent className="p-0 h-full relative">
+                                    <Image
+                                        src="/images/community_gathering.png"
+                                        alt="Gallery Background"
+                                        fill
+                                        className="object-cover opacity-50 group-hover:opacity-30 transition-opacity scale-150 blur-sm"
+                                    />
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 z-10">
+                                        <Camera className="h-8 w-8 mb-3 text-white/80 group-hover:scale-110 transition-transform" />
+                                        <h3 className="font-bold text-lg text-center">갤러리 더보기</h3>
+                                        <p className="text-xs text-white/60 mt-1">지난 사역 사진들</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </Link>
                     </motion.div>
 
                 </motion.div>
@@ -171,6 +181,8 @@ export default function CommunityHighlightsSection() {
                     </Button>
                 </div>
             </div>
+
+            <OfferingModal open={isOfferingModalOpen} onOpenChange={setIsOfferingModalOpen} />
         </section>
     )
 }

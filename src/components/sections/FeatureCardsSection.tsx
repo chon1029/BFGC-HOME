@@ -32,7 +32,7 @@ const features = [
         subtitle: '믿음의 공동체의\n삶의 구심점이 되는 교회',
         verse: '"그들이 사도의 가르침을 받아 서로 교제하고 떡을 떼며 오로지 기도하기를 힘쓰니라" (사도행전 2:42)',
         image: '/images/herosection/link-img/contact.jpg',
-        href: '/partnership/contact',
+        href: '/guide/vision',
         color: 'from-slate-900/95 via-slate-900/80 to-transparent', // 무채색 계열
     }
 ]

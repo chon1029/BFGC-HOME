@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useSession } from 'next-auth/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageLayout from '@/components/layout/PageLayout'
 import { Calendar, BookOpen, ChevronRight, Search, ChevronDown, ChevronUp, ChevronLeft, ChevronsLeft, ChevronsRight } from 'lucide-react'
@@ -9,73 +10,28 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { DailyBreadUploadModal } from '@/components/sections/worship/DailyBreadUploadModal'
+import DailyBreadActionButtons from '@/components/sections/worship/DailyBreadActionButtons'
 import { BIBLE_BOOKS } from '@/lib/constants/bible'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
-// ----------------------------------------------------------------------
-// Mock Data (Sanity 연동 전)
-// ----------------------------------------------------------------------
-
-const DAILY_BREADS = [
-    {
-        id: '1',
-        date: '2024-04-02',
-        title: '하나님의 형상대로',
-        book: '창세기',
-        chapterVerse: '1:26-31',
-        keyVerse: '하나님이 자기 형상 곧 하나님의 형상대로 사람을 창조하시되 남자와 여자를 창조하시고',
-        summary: '우리는 하나님의 걸작품입니다. 오늘 하루도 존귀한 자녀로서의 정체성을 기억합시다.',
-    },
-    {
-        id: '2',
-        date: '2024-04-01',
-        title: '새로운 시작을 위한 기도',
-        book: '창세기',
-        chapterVerse: '1:1-5',
-        keyVerse: '태초에 하나님이 천지를 창조하시니라',
-        summary: '혼돈과 공허 속에서 빛을 만드신 하나님의 창조 사역을 묵상합니다.',
-    },
-    {
-        id: '3',
-        date: '2024-03-31',
-        title: '부활의 아침에',
-        book: '마태복음',
-        chapterVerse: '28:1-10',
-        keyVerse: '그가 여기 계시지 않고 그가 말씀하시던 대로 살아나셨느니라',
-        summary: '부활의 기쁨과 소망을 나누는 거룩한 아침입니다.',
-    },
-    {
-        id: '4',
-        date: '2024-03-30',
-        title: '십자가의 길',
-        book: '마가복음',
-        chapterVerse: '15:21-32',
-        keyVerse: '구레네 사람 시몬이 억지로 십자가를 지고 예수님을 따랐던 그 길을 묵상합니다.',
-        summary: '십자가의 길을 함께 걷는 우리의 믿음을 돌아봅니다.',
-    },
-    {
-        id: '5',
-        date: '2024-03-29',
-        title: '겟세마네 동산의 기도',
-        book: '마가복음',
-        chapterVerse: '14:32-42',
-        keyVerse: '아바 아버지, 아버지께는 모든 것이 가능하오니',
-        summary: '예수님의 간절한 기도를 통해 우리의 기도를 배웁니다.',
-    },
-]
+import { MOCK_DAILY_BREADS } from '@/lib/mock/daily-bread-data'
 
 const ITEMS_PER_PAGE = 10
 
 export default function DailyBreadPage() {
+    const { data: session } = useSession()
     const [selectedBook, setSelectedBook] = useState<string | null>(null)
     const [searchTerm, setSearchTerm] = useState('')
     const [isFilterOpen, setIsFilterOpen] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
 
-    const filteredBreads = DAILY_BREADS.filter(item => {
+    // 관리자 여부 확인
+    const isAdmin = session?.user?.email === 'admin@bfgc.org'
+
+    const filteredBreads = MOCK_DAILY_BREADS.filter(item => {
         const matchesBook = selectedBook ? item.book === selectedBook : true
-        const matchesSearch = item.title.includes(searchTerm) || item.summary.includes(searchTerm)
+        const matchesSearch = item.title.includes(searchTerm) || (item.content?.includes(searchTerm) ?? false)
         return matchesBook && matchesSearch
     })
 
@@ -92,6 +48,17 @@ export default function DailyBreadPage() {
     const handleBookSelect = (bookName: string | null) => {
         setSelectedBook(bookName)
         setCurrentPage(1)
+    }
+
+    // 관리자 액션 핸들러
+    const handleEdit = (breadId: string) => {
+        // TODO: Sanity 수정 API 호출
+        alert(`일용할 양식(ID: ${breadId})를 수정합니다. (Mock)`)
+    }
+
+    const handleDelete = (breadId: string) => {
+        // TODO: Sanity 삭제 API 호출
+        alert(`일용할 양식(ID: ${breadId})가 삭제되었습니다. (Mock)`)
     }
 
     return (
@@ -191,7 +158,7 @@ export default function DailyBreadPage() {
                                 <CardContent className="p-6 pt-0 border-t border-slate-100 dark:border-slate-800">
                                     <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2 mt-4">
                                         {BIBLE_BOOKS.map((book) => {
-                                            const count = DAILY_BREADS.filter(b => b.book === book.name).length
+                                            const count = MOCK_DAILY_BREADS.filter(b => b.book === book.name).length
                                             const isActive = selectedBook === book.name
                                             const hasContent = count > 0
 
@@ -256,14 +223,26 @@ export default function DailyBreadPage() {
                             {currentBreads.length > 0 ? (
                                 currentBreads.map((item, index) => (
                                     <motion.div
-                                        key={item.id}
+                                        key={item._id}
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, scale: 0.95 }}
                                         transition={{ delay: index * 0.05 }}
                                     >
-                                        <Link href={`/worship/daily-bread/${item.id}`}>
-                                            <Card className="group hover:shadow-lg transition-all duration-300 border-slate-200 dark:border-slate-800 hover:border-amber-200 dark:hover:border-amber-900 overflow-hidden">
+                                        <Link href={`/worship/daily-bread/${item._id}`}>
+                                            <Card className="group relative hover:shadow-lg transition-all duration-300 border-slate-200 dark:border-slate-800 hover:border-amber-200 dark:hover:border-amber-900 overflow-hidden">
+                                                {/* 관리자 액션 버튼 (호버 시 표시) */}
+                                                {isAdmin && (
+                                                    <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 dark:bg-slate-900/90 rounded-md shadow-sm backdrop-blur-sm">
+                                                        <DailyBreadActionButtons
+                                                            breadId={item._id}
+                                                            breadTitle={item.title}
+                                                            onEdit={handleEdit}
+                                                            onDelete={handleDelete}
+                                                        />
+                                                    </div>
+                                                )}
+
                                                 <CardContent className="p-0 flex flex-col md:flex-row">
                                                     <div className="bg-slate-50 dark:bg-slate-800/50 p-6 flex flex-col justify-center items-center md:w-32 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-700 group-hover:bg-amber-50/50 dark:group-hover:bg-amber-900/10 transition-colors">
                                                         <span className="text-sm text-slate-500 font-medium">{item.date.split('-')[0]}</span>

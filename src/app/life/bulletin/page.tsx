@@ -8,25 +8,11 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Download, Calendar, Bell, FileText, ChevronRight, Pin, Clock, MapPin, ZoomIn, Plus, LayoutGrid, List as ListIcon } from 'lucide-react'
 import { OptimizedImage } from '@/components/common/OptimizedImage'
-import { client, urlFor } from '@/lib/sanity'
 import { BulletinUploadModal } from '@/components/sections/bulletin/BulletinUploadModal'
+import BulletinActionButtons from '@/components/sections/bulletin/BulletinActionButtons'
+import { MOCK_BULLETINS } from '@/lib/mock/bulletin-data'
+import { Bulletin } from '@/types/bulletin'
 import { cn } from '@/lib/utils'
-
-// ----------------------------------------------------------------------
-// Types
-// ----------------------------------------------------------------------
-
-interface Bulletin {
-    _id: string
-    title: string
-    date: string
-    volume?: string
-    thumbnail: any
-    pdfFile: any
-    sermonTitle?: string
-    preacher?: string
-    scripture?: string
-}
 
 const NOTICES = [
     {
@@ -75,46 +61,34 @@ export default function BulletinPage() {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
 
-    const fetchBulletins = async () => {
-        try {
-            const query = `*[_type == "bulletin"] | order(date desc) {
-        _id,
-        title,
-        date,
-        volume,
-        thumbnail,
-        pdfFile,
-        sermonTitle,
-        preacher,
-        scripture
-      }`
-            const data = await client.fetch(query)
-            setBulletins(data)
-        } catch (error) {
-            console.error('Failed to fetch bulletins:', error)
-        } finally {
-            setLoading(false)
-        }
-    }
+    // 관리자 여부 확인
+    const isAdmin = session?.user?.email === 'admin@bfgc.org'
 
     useEffect(() => {
-        fetchBulletins()
+        // Mock Data 로드
+        setBulletins(MOCK_BULLETINS)
+        setLoading(false)
     }, [])
 
     const latestBulletin = bulletins[0]
     const pastBulletins = bulletins.slice(1)
 
     // PDF 다운로드 핸들러
-    const handleDownload = (fileRef: any) => {
-        if (!fileRef) return
-        const url = urlFor(fileRef).url() // 실제로는 file asset URL을 가져와야 함. 
-        // Sanity file URL은 urlFor로 안될 수 있음. asset._ref를 통해 직접 구성하거나 쿼리에서 asset->url을 가져와야 함.
-        // 여기서는 간단히 window.open으로 처리하거나, 쿼리를 수정해야 함.
-        // * 수정된 쿼리 로직 필요: pdfFile.asset->url
+    const handleDownload = (fileUrl?: string) => {
+        if (!fileUrl) return
+        window.open(fileUrl, '_blank')
     }
 
-    // 쿼리 수정이 필요하므로 fetchBulletins 내부 쿼리를 수정하는 것이 좋음.
-    // 하지만 여기서는 urlFor 대신 asset URL을 직접 사용하도록 쿼리를 수정하겠음.
+    // 관리자 액션 핸들러
+    const handleEdit = (id: string) => {
+        // TODO: Sanity 수정 API 호출
+        alert(`주보(ID: ${id})를 수정합니다. (Mock)`)
+    }
+
+    const handleDelete = (id: string) => {
+        // TODO: Sanity 삭제 API 호출
+        alert(`주보(ID: ${id})가 삭제되었습니다. (Mock)`)
+    }
 
     return (
         <PageLayout
@@ -179,10 +153,25 @@ export default function BulletinPage() {
                                     animate={{ opacity: 1, y: 0, rotate: 3 }}
                                     transition={{ duration: 0.8 }}
                                     className="relative w-64 md:w-80 aspect-[1/1.414] bg-white rounded-lg shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500 cursor-pointer group"
+                                    onClick={() => handleDownload(latestBulletin.pdfFile)}
                                 >
+                                    {/* 관리자 액션 버튼 (호버 시 표시) */}
+                                    {isAdmin && (
+                                        <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 rounded-md shadow-sm backdrop-blur-sm"
+                                            onClick={(e) => e.stopPropagation()} // 부모 클릭 방지
+                                        >
+                                            <BulletinActionButtons
+                                                bulletinId={latestBulletin._id}
+                                                bulletinTitle={latestBulletin.title}
+                                                onEdit={handleEdit}
+                                                onDelete={handleDelete}
+                                            />
+                                        </div>
+                                    )}
+
                                     {latestBulletin.thumbnail && (
                                         <OptimizedImage
-                                            src={urlFor(latestBulletin.thumbnail).url()}
+                                            src={latestBulletin.thumbnail}
                                             alt="주보 표지"
                                             fill
                                             className="object-cover rounded-lg"
@@ -190,7 +179,7 @@ export default function BulletinPage() {
                                     )}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-end justify-center pb-6">
                                         <span className="text-white font-medium flex items-center gap-2">
-                                            <ZoomIn className="w-5 h-5" /> 크게 보기
+                                            <ZoomIn className="w-5 h-5" /> 크게 보기 (PDF)
                                         </span>
                                     </div>
                                 </motion.div>
@@ -272,12 +261,24 @@ export default function BulletinPage() {
                                                 initial={{ opacity: 0, scale: 0.9 }}
                                                 whileInView={{ opacity: 1, scale: 1 }}
                                                 viewport={{ once: true }}
-                                                className="group cursor-pointer"
+                                                className="group cursor-pointer relative"
                                             >
                                                 <div className="relative aspect-[1/1.414] bg-slate-200 rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 mb-3">
+                                                    {/* 관리자 액션 버튼 (호버 시 표시) */}
+                                                    {isAdmin && (
+                                                        <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 rounded-md shadow-sm backdrop-blur-sm">
+                                                            <BulletinActionButtons
+                                                                bulletinId={bulletin._id}
+                                                                bulletinTitle={bulletin.title}
+                                                                onEdit={handleEdit}
+                                                                onDelete={handleDelete}
+                                                            />
+                                                        </div>
+                                                    )}
+
                                                     {bulletin.thumbnail && (
                                                         <OptimizedImage
-                                                            src={urlFor(bulletin.thumbnail).url()}
+                                                            src={bulletin.thumbnail}
                                                             alt={bulletin.title}
                                                             fill
                                                             className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -297,12 +298,12 @@ export default function BulletinPage() {
                                 ) : (
                                     <div className="space-y-2">
                                         {pastBulletins.map((bulletin) => (
-                                            <div key={bulletin._id} className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl hover:border-sky-200 transition-colors group cursor-pointer">
+                                            <div key={bulletin._id} className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl hover:border-sky-200 transition-colors group cursor-pointer relative">
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-12 h-16 bg-slate-200 rounded overflow-hidden relative flex-shrink-0">
                                                         {bulletin.thumbnail && (
                                                             <OptimizedImage
-                                                                src={urlFor(bulletin.thumbnail).url()}
+                                                                src={bulletin.thumbnail}
                                                                 alt={bulletin.title}
                                                                 fill
                                                                 className="object-cover"
@@ -316,9 +317,23 @@ export default function BulletinPage() {
                                                         <p className="text-sm text-slate-500">{bulletin.date} • {bulletin.volume}</p>
                                                     </div>
                                                 </div>
-                                                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-sky-600">
-                                                    <Download className="w-4 h-4" />
-                                                </Button>
+
+                                                <div className="flex items-center gap-2">
+                                                    {/* 관리자 액션 버튼 */}
+                                                    {isAdmin && (
+                                                        <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            <BulletinActionButtons
+                                                                bulletinId={bulletin._id}
+                                                                bulletinTitle={bulletin.title}
+                                                                onEdit={handleEdit}
+                                                                onDelete={handleDelete}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                    <Button variant="ghost" size="sm" className="text-slate-400 hover:text-sky-600">
+                                                        <Download className="w-4 h-4" />
+                                                    </Button>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -365,7 +380,7 @@ export default function BulletinPage() {
             <BulletinUploadModal
                 open={isUploadModalOpen}
                 onOpenChange={setIsUploadModalOpen}
-                onSuccess={fetchBulletins}
+                onSuccess={() => { }} // Mock에서는 아무 동작 안 함
             />
         </PageLayout>
     )

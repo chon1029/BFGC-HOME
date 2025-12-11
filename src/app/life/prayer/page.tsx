@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { motion } from 'framer-motion'
-import { client } from '@/lib/sanity'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Calendar, ChevronRight, Sparkles, Plus } from 'lucide-react'
@@ -13,28 +12,10 @@ import Link from 'next/link'
 import { WeeklyPrayerCard } from '@/components/sections/prayer/WeeklyPrayerCard'
 import { PrayerHeroSection } from '@/components/sections/prayer/PrayerHeroSection'
 import { WeeklyPrayerModal } from '@/components/modals/WeeklyPrayerModal'
+import PrayerActionButtons from '@/components/sections/prayer/PrayerActionButtons'
 import PageLayout from '@/components/layout/PageLayout'
-
-interface DailyPrayer {
-    date: string
-    dayOfWeek: string
-    theme: string
-    prayerTopic1: string
-    prayerTopic2: string
-    prayerTopic3: string
-}
-
-interface WeeklyPrayer {
-    _id: string
-    title: string
-    weekStartDate: string
-    weekEndDate: string
-    slug: {
-        current: string
-    }
-    communityConfession: string
-    dailyPrayers: DailyPrayer[]
-}
+import { MOCK_WEEKLY_PRAYERS } from '@/lib/mock/prayer-data'
+import { WeeklyPrayer } from '@/types/prayer'
 
 export default function PrayerPage() {
     const { data: session } = useSession()
@@ -43,35 +24,27 @@ export default function PrayerPage() {
     const [loading, setLoading] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
-    const isAdmin = session?.user?.role === 'admin'
+    // 관리자 여부 확인
+    const isAdmin = session?.user?.email === 'admin@bfgc.org'
 
     useEffect(() => {
-        fetchPrayers()
+        // Mock Data 로드
+        if (MOCK_WEEKLY_PRAYERS.length > 0) {
+            setLatestPrayer(MOCK_WEEKLY_PRAYERS[0])
+            setArchivePrayers(MOCK_WEEKLY_PRAYERS.slice(1))
+        }
+        setLoading(false)
     }, [])
 
-    const fetchPrayers = async () => {
-        try {
-            const data = await client.fetch(`
-                *[_type == "weeklyPrayer" && isPublished == true] | order(weekStartDate desc) {
-                    _id,
-                    title,
-                    weekStartDate,
-                    weekEndDate,
-                    slug,
-                    communityConfession,
-                    dailyPrayers
-                }
-            `)
+    // 관리자 액션 핸들러
+    const handleEdit = (id: string) => {
+        // TODO: Sanity 수정 API 호출
+        alert(`주간기도문(ID: ${id})를 수정합니다. (Mock)`)
+    }
 
-            if (data.length > 0) {
-                setLatestPrayer(data[0])
-                setArchivePrayers(data.slice(1))
-            }
-        } catch (error) {
-            console.error('Failed to fetch prayers:', error)
-        } finally {
-            setLoading(false)
-        }
+    const handleDelete = (id: string) => {
+        // TODO: Sanity 삭제 API 호출
+        alert(`주간기도문(ID: ${id})가 삭제되었습니다. (Mock)`)
     }
 
     // Get main theme from latest prayer
@@ -151,7 +124,18 @@ export default function PrayerPage() {
                 ) : (
                     <>
                         {/* Latest Prayer */}
-                        <div>
+                        <div className="relative">
+                            {/* 관리자 액션 버튼 (호버 시 표시) */}
+                            {isAdmin && latestPrayer && (
+                                <div className="absolute top-4 right-4 z-20 opacity-0 hover:opacity-100 transition-opacity bg-white/90 rounded-md shadow-sm backdrop-blur-sm">
+                                    <PrayerActionButtons
+                                        prayerId={latestPrayer._id}
+                                        prayerTitle={latestPrayer.title}
+                                        onEdit={handleEdit}
+                                        onDelete={handleDelete}
+                                    />
+                                </div>
+                            )}
                             <WeeklyPrayerCard
                                 title={latestPrayer.title}
                                 weekStartDate={latestPrayer.weekStartDate}
@@ -185,9 +169,22 @@ export default function PrayerPage() {
                                             initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
+                                            className="relative group"
                                         >
+                                            {/* 관리자 액션 버튼 (호버 시 표시) */}
+                                            {isAdmin && (
+                                                <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 rounded-md shadow-sm backdrop-blur-sm">
+                                                    <PrayerActionButtons
+                                                        prayerId={prayer._id}
+                                                        prayerTitle={prayer.title}
+                                                        onEdit={handleEdit}
+                                                        onDelete={handleDelete}
+                                                    />
+                                                </div>
+                                            )}
+
                                             <Link href={`/life/prayer/${prayer.slug.current}`}>
-                                                <Card className="group hover:shadow-xl transition-all duration-300 border-2 border-slate-200 hover:border-sky-300 cursor-pointer overflow-hidden">
+                                                <Card className="hover:shadow-xl transition-all duration-300 border-2 border-slate-200 hover:border-sky-300 cursor-pointer overflow-hidden">
                                                     <CardHeader className="bg-gradient-to-r from-slate-50 to-sky-50 group-hover:from-sky-50 group-hover:to-blue-50 transition-all duration-300">
                                                         <div className="flex items-center justify-between">
                                                             <div className="flex-1">

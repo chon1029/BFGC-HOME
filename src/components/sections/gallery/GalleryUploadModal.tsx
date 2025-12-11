@@ -24,7 +24,7 @@ export function GalleryUploadModal({ open, onOpenChange, onSuccess }: GalleryUpl
     const [category, setCategory] = useState('')
     const [date, setDate] = useState('')
     const [description, setDescription] = useState('')
-    const [thumbnail, setThumbnail] = useState<File | null>(null)
+    const [thumbnailIndex, setThumbnailIndex] = useState<number>(0)
     const [images, setImages] = useState<File[]>([])
     const [isDragging, setIsDragging] = useState(false)
 
@@ -59,12 +59,23 @@ export function GalleryUploadModal({ open, onOpenChange, onSuccess }: GalleryUpl
 
     const removeImage = (index: number) => {
         setImages(prev => prev.filter((_, i) => i !== index))
+        // 썸네일 인덱스 조정
+        if (index === thumbnailIndex) {
+            setThumbnailIndex(0)
+        } else if (index < thumbnailIndex) {
+            setThumbnailIndex(prev => prev - 1)
+        }
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!title || !category || !date || !thumbnail) {
+        if (!title || !category || !date) {
             alert('필수 항목을 모두 입력해주세요.')
+            return
+        }
+
+        if (images.length === 0) {
+            alert('최소 한 장 이상의 사진을 업로드해주세요.')
             return
         }
 
@@ -75,7 +86,11 @@ export function GalleryUploadModal({ open, onOpenChange, onSuccess }: GalleryUpl
             formData.append('category', category)
             formData.append('date', date)
             formData.append('description', description)
-            formData.append('thumbnail', thumbnail)
+
+            // 선택된 썸네일 이미지
+            if (images[thumbnailIndex]) {
+                formData.append('thumbnail', images[thumbnailIndex])
+            }
 
             images.forEach((file) => {
                 formData.append('images', file)
@@ -96,7 +111,7 @@ export function GalleryUploadModal({ open, onOpenChange, onSuccess }: GalleryUpl
             setCategory('')
             setDate('')
             setDescription('')
-            setThumbnail(null)
+            setThumbnailIndex(0)
             setImages([])
         } catch (error) {
             console.error('Error:', error)
@@ -174,33 +189,9 @@ export function GalleryUploadModal({ open, onOpenChange, onSuccess }: GalleryUpl
                             </div>
 
                             <div className="space-y-6 border-t border-slate-200 dark:border-slate-800 pt-6">
-                                {/* 썸네일 업로드 */}
-                                <div className="space-y-2">
-                                    <Label>대표 이미지 (썸네일) *</Label>
-                                    <div className="flex items-center gap-4">
-                                        <div className="relative w-32 h-24 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden flex items-center justify-center border border-dashed border-slate-300 dark:border-slate-700 shrink-0">
-                                            {thumbnail ? (
-                                                <img src={URL.createObjectURL(thumbnail)} alt="Preview" className="w-full h-full object-cover" />
-                                            ) : (
-                                                <ImageIcon className="w-8 h-8 text-slate-400" />
-                                            )}
-                                        </div>
-                                        <div className="flex-1">
-                                            <Input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={(e) => setThumbnail(e.target.files?.[0] || null)}
-                                                required
-                                                className="cursor-pointer"
-                                            />
-                                            <p className="text-xs text-slate-500 mt-1">앨범 목록에 표시될 대표 사진을 선택하세요.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 {/* 다중 이미지 Drag & Drop 영역 */}
                                 <div className="space-y-2">
-                                    <Label>추가 이미지들 (Drag & Drop)</Label>
+                                    <Label>사진 업로드 * (첫 번째 사진이 썸네일로 지정됩니다)</Label>
                                     <div
                                         onDragOver={handleDragOver}
                                         onDragLeave={handleDragLeave}
@@ -232,19 +223,38 @@ export function GalleryUploadModal({ open, onOpenChange, onSuccess }: GalleryUpl
                                         </div>
                                     </div>
 
-                                    {/* 선택된 이미지 미리보기 */}
+                                    {/* 선택된 이미지 미리보기 및 썸네일 선택 */}
                                     {images.length > 0 && (
                                         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 mt-4">
                                             {images.map((file, index) => (
-                                                <div key={index} className="relative aspect-square rounded-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+                                                <div
+                                                    key={index}
+                                                    className={cn(
+                                                        "relative aspect-square rounded-lg overflow-hidden group border-2 cursor-pointer transition-all",
+                                                        thumbnailIndex === index ? "border-sky-500 ring-2 ring-sky-200" : "border-slate-200 dark:border-slate-700 hover:border-sky-300"
+                                                    )}
+                                                    onClick={() => setThumbnailIndex(index)}
+                                                >
                                                     <img
                                                         src={URL.createObjectURL(file)}
                                                         alt={`Preview ${index}`}
                                                         className="w-full h-full object-cover"
                                                     />
+
+                                                    {/* 썸네일 배지 */}
+                                                    {thumbnailIndex === index && (
+                                                        <div className="absolute top-1 left-1 bg-sky-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold shadow-sm">
+                                                            대표
+                                                        </div>
+                                                    )}
+
+                                                    {/* 삭제 버튼 */}
                                                     <button
                                                         type="button"
-                                                        onClick={() => removeImage(index)}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            removeImage(index)
+                                                        }}
                                                         className="absolute top-1 right-1 bg-black/50 hover:bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-all"
                                                     >
                                                         <X className="w-3 h-3" />
@@ -254,7 +264,9 @@ export function GalleryUploadModal({ open, onOpenChange, onSuccess }: GalleryUpl
                                         </div>
                                     )}
                                     {images.length > 0 && (
-                                        <p className="text-right text-sm text-slate-500">총 {images.length}장 선택됨</p>
+                                        <p className="text-right text-sm text-slate-500">
+                                            총 {images.length}장 선택됨 • 사진을 클릭하여 대표 이미지를 변경하세요.
+                                        </p>
                                     )}
                                 </div>
                             </div>

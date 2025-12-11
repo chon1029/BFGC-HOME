@@ -67,7 +67,14 @@ export default function SermonDetailPage() {
 
     if (!sermon) {
         return (
-            <PageLayout>
+            <PageLayout
+                sidebarMenu="worship"
+                breadcrumbs={[
+                    { label: 'Home', href: '/' },
+                    { label: '예배•양육', href: '/worship' },
+                    { label: '주일설교', href: '/worship/sermons' },
+                ]}
+            >
                 <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
                     <h2 className="text-2xl font-bold">설교를 찾을 수 없습니다.</h2>
                     <Button onClick={() => router.back()}>돌아가기</Button>

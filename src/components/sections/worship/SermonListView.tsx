@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Play, Calendar, User, BookOpen } from 'lucide-react'
 import { Sermon } from '@/types/sermon'
 import { Badge } from '@/components/ui/badge'
@@ -57,8 +58,8 @@ export default function SermonListView({ sermons, isAdmin, onEdit, onDelete }: S
                         </span>
                     </div>
 
-                    {/* Main Content */}
-                    <div className="flex-1 min-w-0">
+                    {/* Main Content - Link로 감싸기 */}
+                    <Link href={`/worship/sermons/${sermon._id}`} className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                             <Badge className={`hidden sm:inline-flex ${getCategoryColor(sermon.category)}`}>
                                 {getCategoryLabel(sermon.category)}
@@ -79,14 +80,16 @@ export default function SermonListView({ sermons, isAdmin, onEdit, onDelete }: S
                             <BookOpen className="w-4 h-4 mr-1.5 text-sky-500" />
                             {sermon.scripture}
                         </div>
-                    </div>
+                    </Link>
 
                     {/* Action Button */}
                     <div className="mt-2 sm:mt-0 w-full sm:w-auto flex items-center gap-2">
-                        <Button variant="outline" size="sm" className="flex-1 sm:flex-none group-hover:bg-sky-50 group-hover:text-sky-600 group-hover:border-sky-200 dark:group-hover:bg-sky-900/20 dark:group-hover:border-sky-800">
-                            <Play className="w-4 h-4 mr-2" />
-                            설교 보기
-                        </Button>
+                        <Link href={`/worship/sermons/${sermon._id}`} className="flex-1 sm:flex-none">
+                            <Button variant="outline" size="sm" className="w-full group-hover:bg-sky-50 group-hover:text-sky-600 group-hover:border-sky-200 dark:group-hover:bg-sky-900/20 dark:group-hover:border-sky-800">
+                                <Play className="w-4 h-4 mr-2" />
+                                설교 보기
+                            </Button>
+                        </Link>
 
                         {/* Admin Actions */}
                         {isAdmin && onEdit && onDelete && (

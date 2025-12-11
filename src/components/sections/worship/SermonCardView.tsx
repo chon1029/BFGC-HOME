@@ -50,47 +50,50 @@ export default function SermonCardView({ sermons, isAdmin, onEdit, onDelete }: S
                         </div>
                     )}
 
-                    {/* Thumbnail */}
-                    <div className="relative aspect-video overflow-hidden bg-slate-100">
-                        <Image
-                            src={getYoutubeThumbnail(sermon.videoUrl)}
-                            alt={sermon.title}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                            <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg">
-                                <Play className="w-5 h-5 text-slate-900 ml-1" fill="currentColor" />
+                    {/* Link로 전체 카드 감싸기 */}
+                    <Link href={`/worship/sermons/${sermon._id}`} className="block">
+                        {/* Thumbnail */}
+                        <div className="relative aspect-video overflow-hidden bg-slate-100">
+                            <Image
+                                src={getYoutubeThumbnail(sermon.videoUrl)}
+                                alt={sermon.title}
+                                fill
+                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg">
+                                    <Play className="w-5 h-5 text-slate-900 ml-1" fill="currentColor" />
+                                </div>
+                            </div>
+                            <div className="absolute top-3 left-3">
+                                <Badge className={getCategoryColor(sermon.category)}>
+                                    {getCategoryLabel(sermon.category)}
+                                </Badge>
                             </div>
                         </div>
-                        <div className="absolute top-3 left-3">
-                            <Badge className={getCategoryColor(sermon.category)}>
-                                {getCategoryLabel(sermon.category)}
-                            </Badge>
-                        </div>
-                    </div>
 
-                    {/* Content */}
-                    <CardContent className="p-5">
-                        <div className="flex items-center gap-2 text-xs text-slate-500 mb-3">
-                            <span className="flex items-center">
-                                <Calendar className="w-3.5 h-3.5 mr-1" />
-                                {new Date(sermon.date).toLocaleDateString()}
-                            </span>
-                            <span className="w-1 h-1 rounded-full bg-slate-300" />
-                            <span className="flex items-center">
-                                <User className="w-3.5 h-3.5 mr-1" />
-                                {sermon.preacher}
-                            </span>
-                        </div>
-                        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-sky-600 transition-colors">
-                            {sermon.title}
-                        </h3>
-                        <div className="flex items-center text-sm text-slate-600 dark:text-slate-400">
-                            <BookOpen className="w-4 h-4 mr-1.5 text-sky-500" />
-                            {sermon.scripture}
-                        </div>
-                    </CardContent>
+                        {/* Content */}
+                        <CardContent className="p-5">
+                            <div className="flex items-center gap-2 text-xs text-slate-500 mb-3">
+                                <span className="flex items-center">
+                                    <Calendar className="w-3.5 h-3.5 mr-1" />
+                                    {new Date(sermon.date).toLocaleDateString()}
+                                </span>
+                                <span className="w-1 h-1 rounded-full bg-slate-300" />
+                                <span className="flex items-center">
+                                    <User className="w-3.5 h-3.5 mr-1" />
+                                    {sermon.preacher}
+                                </span>
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-sky-600 transition-colors">
+                                {sermon.title}
+                            </h3>
+                            <div className="flex items-center text-sm text-slate-600 dark:text-slate-400">
+                                <BookOpen className="w-4 h-4 mr-1.5 text-sky-500" />
+                                {sermon.scripture}
+                            </div>
+                        </CardContent>
+                    </Link>
                 </Card>
             ))}
         </div>
