@@ -10,6 +10,32 @@ const client = createClient({
     useCdn: false,
 })
 
+// GET: 주간기도문 목록 조회
+export async function GET() {
+    try {
+        const query = `*[_type == "weeklyPrayer" && isPublished == true] | order(weekStartDate desc) {
+            _id,
+            title,
+            slug,
+            weekStartDate,
+            weekEndDate,
+            communityConfession,
+            dailyPrayers,
+            isPublished,
+            publishedAt
+        }`
+
+        const prayers = await client.fetch(query)
+        return NextResponse.json(prayers, { status: 200 })
+    } catch (error) {
+        console.error('Error fetching weekly prayers:', error)
+        return NextResponse.json(
+            { message: 'Error fetching weekly prayers', error: String(error) },
+            { status: 500 }
+        )
+    }
+}
+
 export async function POST(request: Request) {
     try {
         const body = await request.json()

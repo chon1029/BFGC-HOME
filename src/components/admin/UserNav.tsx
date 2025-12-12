@@ -38,7 +38,7 @@ export function UserNav() {
                     <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none">{session?.user?.name || '관리자'}</p>
                         <p className="text-xs leading-none text-muted-foreground">
-                            {session?.user?.email || 'admin@bfgc.org'}
+                            {session?.user?.email || 'chon1029@gmail.com'}
                         </p>
                     </div>
                 </DropdownMenuLabel>

@@ -14,7 +14,6 @@ import { PrayerHeroSection } from '@/components/sections/prayer/PrayerHeroSectio
 import { WeeklyPrayerModal } from '@/components/modals/WeeklyPrayerModal'
 import PrayerActionButtons from '@/components/sections/prayer/PrayerActionButtons'
 import PageLayout from '@/components/layout/PageLayout'
-import { MOCK_WEEKLY_PRAYERS } from '@/lib/mock/prayer-data'
 import { WeeklyPrayer } from '@/types/prayer'
 
 export default function PrayerPage() {
@@ -25,15 +24,36 @@ export default function PrayerPage() {
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     // 관리자 여부 확인
-    const isAdmin = session?.user?.email === 'admin@bfgc.org'
+    const isAdmin = session?.user?.email === 'chon1029@gmail.com'
 
     useEffect(() => {
-        // Mock Data 로드
-        if (MOCK_WEEKLY_PRAYERS.length > 0) {
-            setLatestPrayer(MOCK_WEEKLY_PRAYERS[0])
-            setArchivePrayers(MOCK_WEEKLY_PRAYERS.slice(1))
+        const fetchWeeklyPrayers = async () => {
+            try {
+                const response = await fetch('/api/weekly-prayer')
+                if (response.ok) {
+                    const data = await response.json()
+                    if (data.length > 0) {
+                        setLatestPrayer(data[0])
+                        setArchivePrayers(data.slice(1))
+                    } else {
+                        setLatestPrayer(null)
+                        setArchivePrayers([])
+                    }
+                } else {
+                    console.error('Failed to fetch prayers')
+                    setLatestPrayer(null)
+                    setArchivePrayers([])
+                }
+            } catch (error) {
+                console.error('Error fetching prayers:', error)
+                setLatestPrayer(null)
+                setArchivePrayers([])
+            } finally {
+                setLoading(false)
+            }
         }
-        setLoading(false)
+
+        fetchWeeklyPrayers()
     }, [])
 
     // 관리자 액션 핸들러
@@ -104,22 +124,51 @@ export default function PrayerPage() {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
+                        transition={{ duration: 0.6 }}
+                        className="text-center py-20 space-y-6"
                     >
-                        <Card className="border-2 border-sky-200 shadow-xl">
-                            <CardContent className="flex flex-col items-center justify-center py-16">
-                                <div className="bg-gradient-to-br from-sky-100 to-blue-100 rounded-full p-6 mb-6">
-                                    <Calendar className="h-16 w-16 text-sky-600" />
-                                </div>
-                                <h3 className="text-2xl font-bold text-slate-900 mb-3">
-                                    아직 주간기도문이 없습니다
-                                </h3>
-                                <p className="text-slate-600 text-center max-w-md">
-                                    곧 새로운 기도문이 업데이트될 예정입니다.<br />
-                                    함께 기도하며 하나님의 뜻을 구하는 시간을 기대해주세요.
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <motion.div
+                            animate={{
+                                scale: [1, 1.05, 1],
+                                rotate: [0, 3, -3, 0]
+                            }}
+                            transition={{
+                                duration: 4,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }}
+                            className="flex justify-center"
+                        >
+                            <div className="p-6 bg-gradient-to-br from-sky-100 to-purple-100 dark:from-sky-900/30 dark:to-purple-900/30 rounded-full">
+                                <Calendar className="w-16 h-16 text-sky-500 dark:text-sky-400" />
+                            </div>
+                        </motion.div>
+
+                        <div className="space-y-3">
+                            <h3 className="text-2xl font-bold text-slate-700 dark:text-slate-300">
+                                등록된 주간기도문이 없습니다
+                            </h3>
+                            <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
+                                기도문이 업로드 되면 이곳에 아주 은혜롭고<br />
+                                감동적인 기도제목들이 보여지게 됩니다
+                            </p>
+                        </div>
+
+                        {isAdmin && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.3, duration: 0.4 }}
+                            >
+                                <Button
+                                    onClick={() => setIsModalOpen(true)}
+                                    className="bg-gradient-to-r from-sky-500 to-purple-500 hover:from-sky-600 hover:to-purple-600 text-white gap-2 shadow-lg hover:shadow-xl transition-all"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    첫 번째 기도문 작성하기
+                                </Button>
+                            </motion.div>
+                        )}
                     </motion.div>
                 ) : (
                     <>

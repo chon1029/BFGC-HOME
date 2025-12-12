@@ -25,13 +25,13 @@ export const authOptions: NextAuthOptions = {
                 // 현재는 Mocking된 관리자 계정만 허용
 
                 // TODO: Sanity User Schema 연동 시 교체
-                const isValidUser = credentials.email === 'admin@bfgc.org' && credentials.password === 'password'
+                const isValidUser = credentials.email === 'chon1029@gmail.com' && credentials.password === 'password'
 
                 if (isValidUser) {
                     return {
                         id: '1',
                         name: 'Admin User',
-                        email: 'admin@bfgc.org',
+                        email: 'chon1029@gmail.com',
                         role: 'admin'
                     }
                 }

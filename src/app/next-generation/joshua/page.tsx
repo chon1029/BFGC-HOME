@@ -28,19 +28,19 @@ const LEADERSHIP = [
 
 const GATHERINGS = [
     {
-        title: '금요 찬양예배',
+        title: '금요 기도회',
         subtitle: 'Passion Worship',
-        time: '매주 금요일 오후 7:30',
+        time: '매주 금요일 저녁 7:00',
         location: '본당',
         description: '한 주간의 삶을 내려놓고 뜨겁게 찬양하며 기도로 나아가는 시간입니다.',
         icon: Flame,
         color: 'bg-orange-100 text-orange-600',
     },
     {
-        title: '주일 청년예배',
+        title: '주일 예배',
         subtitle: 'Sunday Service',
-        time: '매주 주일 오후 2:00',
-        location: '교육관 4층',
+        time: '매주 주일 오후 3:00',
+        location: '본 예배당',
         description: '청년의 시각으로 말씀을 해석하고 삶에 적용하는 예배입니다.',
         icon: Shield,
         color: 'bg-blue-100 text-blue-600',
@@ -136,8 +136,8 @@ export default function JoshuaPage() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {[
-                                { icon: Target, title: 'Vision', desc: '하나님 나라를 확장하는 청년' },
-                                { icon: Heart, title: 'Community', desc: '사랑으로 하나되는 공동체' },
+                                { icon: Target, title: 'Vision', desc: '하나님 나라를 확장하는 여호수아 청년부' },
+                                { icon: Heart, title: 'Community', desc: '사랑으로 하나되는 여호수아 청년부' },
                                 { icon: BookOpen, title: 'Discipleship', desc: '말씀으로 훈련된 제자' },
                                 { icon: Coffee, title: 'Fellowship', desc: '삶을 나누는 진정한 교제' },
                             ].map((item, i) => (
@@ -207,45 +207,6 @@ export default function JoshuaPage() {
                                 </p>
                             </motion.div>
                         ))}
-                    </div>
-                </section>
-
-                {/* 4. Leadership */}
-                <section className="bg-slate-900 text-white rounded-3xl p-10 md:p-16 overflow-hidden relative">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-
-                    <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
-                        <div className="space-y-6">
-                            <h2 className="text-3xl font-bold">섬기는 사람들</h2>
-                            <p className="text-slate-300 leading-relaxed">
-                                여호수아 청년부를 위해<br />
-                                기도하며 섬기는 리더십입니다.<br />
-                                여러분의 신앙 생활을 돕겠습니다.
-                            </p>
-                            <Button variant="outline" className="border-white text-white hover:bg-white hover:text-slate-900">
-                                임원단 전체보기 <ArrowRight className="w-4 h-4 ml-2" />
-                            </Button>
-                        </div>
-
-                        <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-8">
-                            {LEADERSHIP.map((leader, index) => (
-                                <div key={index} className="flex items-center gap-4 bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
-                                    <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-blue-400 flex-shrink-0">
-                                        <OptimizedImage
-                                            src={leader.image}
-                                            alt={leader.name}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-bold text-lg">{leader.name}</h3>
-                                        <p className="text-blue-400 text-sm mb-1">{leader.role}</p>
-                                        <p className="text-xs text-slate-400 italic">"{leader.message}"</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
                     </div>
                 </section>
 

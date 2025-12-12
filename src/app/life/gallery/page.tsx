@@ -6,12 +6,11 @@ import { useSession } from 'next-auth/react'
 import PageLayout from '@/components/layout/PageLayout'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Search, X, ZoomIn, Calendar, Layers, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { Search, X, ZoomIn, Calendar, Layers, ChevronLeft, ChevronRight, Plus, Image as ImageIcon } from 'lucide-react'
 import { OptimizedImage } from '@/components/common/OptimizedImage'
 import { cn } from '@/lib/utils'
 import { GalleryUploadModal } from '@/components/sections/gallery/GalleryUploadModal'
 import GalleryActionButtons from '@/components/sections/gallery/GalleryActionButtons'
-import { MOCK_GALLERY_ITEMS } from '@/lib/mock/gallery-data'
 import { GalleryItem } from '@/types/gallery'
 
 const CATEGORIES = ['전체', '예배', '친교', '행사', '다음세대', '선교']
@@ -30,12 +29,15 @@ export default function GalleryPage() {
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
 
     // 관리자 여부 확인
-    const isAdmin = session?.user?.email === 'admin@bfgc.org'
+    const isAdmin = session?.user?.email === 'chon1029@gmail.com'
 
     useEffect(() => {
-        // Mock Data 로드
-        setItems(MOCK_GALLERY_ITEMS)
+        // 실제 API 연동 전까지 빈 배열
+        setItems([])
         setLoading(false)
+
+        // TODO: 나중에 실제 API 호출
+        // fetchGalleryItems()
     }, [])
 
     // 관리자 액션 핸들러
@@ -99,7 +101,7 @@ export default function GalleryPage() {
                     className="relative rounded-3xl overflow-hidden h-[300px] md:h-[400px] shadow-2xl"
                 >
                     <OptimizedImage
-                        src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1000&auto=format&fit=crop"
+                        src="/images/gallery-bg.jpg"
                         alt="Gallery Hero"
                         fill
                         className="object-cover"
@@ -115,7 +117,7 @@ export default function GalleryPage() {
                         </h1>
                         <p className="text-slate-200 max-w-lg text-lg">
                             부다페스트 한인선교교회의 은혜로운 순간들을 기록합니다.
-                            함께 웃고, 기도하며 나누었던 소중한 추억들을 만나보세요.
+                            <br />함께 웃고, 기도하며 나누었던 소중한 추억들을 만나보세요.
                         </p>
                     </div>
                 </motion.div>
@@ -172,7 +174,7 @@ export default function GalleryPage() {
                 ) : (
                     <motion.div
                         layout
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
                     >
                         <AnimatePresence>
                             {filteredItems.map((item) => (
@@ -183,7 +185,7 @@ export default function GalleryPage() {
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
                                     transition={{ duration: 0.3 }}
-                                    className="group relative aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500"
+                                    className="group relative aspect-square rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500"
                                     onClick={() => openAlbum(item)}
                                 >
                                     {/* 관리자 액션 버튼 (호버 시 표시) */}
@@ -208,24 +210,21 @@ export default function GalleryPage() {
                                     )}
 
                                     {/* Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
                                         <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                                             <div className="flex items-center justify-between mb-2">
-                                                <Badge className="bg-sky-500/80 backdrop-blur-sm border-none text-white">
+                                                <Badge className="bg-sky-500/90 backdrop-blur-sm border-none text-white text-xs">
                                                     {item.category}
                                                 </Badge>
-                                                <div className="flex items-center gap-1 text-white/80 text-xs">
-                                                    <Calendar className="w-3 h-3" />
-                                                    {item.date}
+                                                <div className="flex items-center gap-1 text-white/90 text-xs">
+                                                    <Layers className="w-3 h-3" />
+                                                    {1 + (item.images?.length || 0)}
                                                 </div>
                                             </div>
-                                            <h3 className="text-white font-bold text-lg mb-1 line-clamp-1">{item.title}</h3>
-                                            <div className="flex items-center gap-2 text-white/60 text-sm">
-                                                <Layers className="w-4 h-4" /> {1 + (item.images?.length || 0)}장
-                                                <span className="mx-1">•</span>
-                                                <span className="flex items-center gap-1">
-                                                    <ZoomIn className="w-3 h-3" /> 크게 보기
-                                                </span>
+                                            <h3 className="text-white font-bold text-sm mb-1 line-clamp-2">{item.title}</h3>
+                                            <div className="flex items-center gap-1 text-white/70 text-xs">
+                                                <Calendar className="w-3 h-3" />
+                                                {item.date}
                                             </div>
                                         </div>
                                     </div>
@@ -236,14 +235,55 @@ export default function GalleryPage() {
                 )}
 
                 {!loading && filteredItems.length === 0 && (
-                    <div className="text-center py-20 text-slate-500 bg-slate-100 dark:bg-slate-900 rounded-2xl">
-                        <p>등록된 앨범이 없습니다.</p>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="text-center py-20 space-y-6"
+                    >
+                        <motion.div
+                            animate={{
+                                scale: [1, 1.05, 1],
+                                rotate: [0, 3, -3, 0]
+                            }}
+                            transition={{
+                                duration: 4,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }}
+                            className="flex justify-center"
+                        >
+                            <div className="p-6 bg-gradient-to-br from-sky-100 to-purple-100 dark:from-sky-900/30 dark:to-purple-900/30 rounded-full">
+                                <ImageIcon className="w-16 h-16 text-sky-500 dark:text-sky-400" />
+                            </div>
+                        </motion.div>
+
+                        <div className="space-y-3">
+                            <h3 className="text-2xl font-bold text-slate-700 dark:text-slate-300">
+                                등록된 사진이 없습니다
+                            </h3>
+                            <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
+                                사진이 업로드 되면 이곳에 아주 멋지고<br />
+                                은혜로운 사진들이 보여지게 됩니다
+                            </p>
+                        </div>
+
                         {session && (
-                            <Button variant="link" onClick={() => setIsUploadModalOpen(true)} className="mt-2 text-sky-600">
-                                첫 번째 앨범을 등록해보세요!
-                            </Button>
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.3, duration: 0.4 }}
+                            >
+                                <Button
+                                    onClick={() => setIsUploadModalOpen(true)}
+                                    className="bg-gradient-to-r from-sky-500 to-purple-500 hover:from-sky-600 hover:to-purple-600 text-white gap-2 shadow-lg hover:shadow-xl transition-all"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    첫 번째 앨범 만들기
+                                </Button>
+                            </motion.div>
                         )}
-                    </div>
+                    </motion.div>
                 )}
 
             </div>

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Download, Calendar, Bell, FileText, ChevronRight, Pin, Clock, MapPin, ZoomIn, Plus, LayoutGrid, List as ListIcon } from 'lucide-react'
 import { OptimizedImage } from '@/components/common/OptimizedImage'
 import { BulletinUploadModal } from '@/components/sections/bulletin/BulletinUploadModal'
+import { BulletinViewModal } from '@/components/sections/bulletin/BulletinViewModal'
 import BulletinActionButtons from '@/components/sections/bulletin/BulletinActionButtons'
 
 import { Bulletin } from '@/types/bulletin'
@@ -19,16 +20,16 @@ const NOTICES = [
     {
         id: 1,
         type: 'important',
-        title: '2024년 부활절 연합예배 안내',
-        date: '2024.03.24',
-        content: '이번 주 주일은 부활절 연합예배로 드립니다. 모든 성도님들은 10시 30분까지 본당으로 모여주시기 바랍니다.',
+        title: '2025년 추수감사주일 예배 안내',
+        date: '2025.11.9',
+        content: '이번 주 주일은 추수감사주일 예배로 드립니다. 한 해동안 베푸신 하나님의 은혜를 기억하며 큰 기쁨과 감사로 하나님께 예배드릴 수 있도록 준비하시기 바랍니다.',
     },
     {
         id: 2,
         type: 'normal',
-        title: '4월 정기 제직회 공고',
-        date: '2024.03.28',
-        content: '다음 주일 2부 예배 후 본당에서 4월 정기 제직회가 있습니다.',
+        title: '2025년 사무총회 공고',
+        date: '2025.12.28',
+        content: '2025년 12월 28일 주일 예배 후 사무총회가 있습니다.',
     },
 ]
 
@@ -36,7 +37,7 @@ const UPCOMING_EVENTS = [
     {
         id: 1,
         title: '전교인 야외예배',
-        date: '2024.05.05',
+        date: '2025.5.11',
         time: '10:00 AM',
         location: '마르기트 섬',
         dDay: 'D-35',
@@ -62,9 +63,11 @@ export default function BulletinPage() {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
     const [editingBulletin, setEditingBulletin] = useState<Bulletin | null>(null)
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+    const [viewingBulletin, setViewingBulletin] = useState<Bulletin | null>(null)
 
     // 관리자 여부 확인
-    const isAdmin = session?.user?.email === 'admin@bfgc.org'
+    const isAdmin = session?.user?.email === 'chon1029@gmail.com'
 
     const fetchBulletins = async () => {
         try {
@@ -87,10 +90,49 @@ export default function BulletinPage() {
     const latestBulletin = bulletins[0]
     const pastBulletins = bulletins.slice(1)
 
-    // PDF 다운로드 핸들러
-    const handleDownload = (fileUrl?: string) => {
+    // PDF 보기 핸들러 (모달로 열기)
+    const handleView = (bulletin: Bulletin) => {
+        setViewingBulletin(bulletin)
+        setIsViewModalOpen(true)
+    }
+
+    // 이전/다음 주보 네비게이션
+    const handlePrevious = () => {
+        if (!viewingBulletin) return
+        const currentIndex = bulletins.findIndex(b => b._id === viewingBulletin._id)
+        if (currentIndex > 0) {
+            setViewingBulletin(bulletins[currentIndex - 1])
+        }
+    }
+
+    const handleNext = () => {
+        if (!viewingBulletin) return
+        const currentIndex = bulletins.findIndex(b => b._id === viewingBulletin._id)
+        if (currentIndex < bulletins.length - 1) {
+            setViewingBulletin(bulletins[currentIndex + 1])
+        }
+    }
+
+    // PDF 다운로드 핸들러 (파일 저장)
+    const handleDownload = async (fileUrl?: string, fileName?: string) => {
         if (!fileUrl) return
-        window.open(fileUrl, '_blank')
+
+        try {
+            const response = await fetch(fileUrl)
+            const blob = await response.blob()
+            const url = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = fileName || '주보.pdf'
+            document.body.appendChild(a)
+            a.click()
+            window.URL.revokeObjectURL(url)
+            document.body.removeChild(a)
+        } catch (error) {
+            console.error('Download error:', error)
+            // 다운로드 실패 시 새 탭에서 열기
+            window.open(fileUrl, '_blank')
+        }
     }
 
     // 관리자 액션 핸들러
@@ -179,8 +221,18 @@ export default function BulletinPage() {
                                 </div>
 
                                 <div className="flex flex-wrap gap-4 pt-4">
-                                    {/* PDF 다운로드 링크 (Sanity File URL은 별도 쿼리로 가져와야 정확함. 임시로 # 처리) */}
-                                    <Button className="bg-sky-600 hover:bg-sky-700 text-white gap-2 h-12 px-6 text-lg shadow-lg shadow-sky-900/20">
+                                    <Button
+                                        onClick={() => handleView(latestBulletin)}
+                                        variant="outline"
+                                        className="border-sky-600 text-sky-600 hover:bg-sky-50 gap-2 h-12 px-6 text-lg"
+                                    >
+                                        <ZoomIn className="w-5 h-5" />
+                                        크게 보기
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleDownload(latestBulletin.pdfFile, `${latestBulletin.title}.pdf`)}
+                                        className="bg-sky-600 hover:bg-sky-700 text-white gap-2 h-12 px-6 text-lg shadow-lg shadow-sky-900/20"
+                                    >
                                         <Download className="w-5 h-5" />
                                         PDF 다운로드
                                     </Button>
@@ -194,7 +246,7 @@ export default function BulletinPage() {
                                     animate={{ opacity: 1, y: 0, rotate: 3 }}
                                     transition={{ duration: 0.8 }}
                                     className="relative w-64 md:w-80 aspect-[1/1.414] bg-white rounded-lg shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500 cursor-pointer group"
-                                    onClick={() => handleDownload(latestBulletin.pdfFile)}
+                                    onClick={() => handleView(latestBulletin)}
                                 >
                                     {/* 관리자 액션 버튼 (호버 시 표시) */}
                                     {isAdmin && (
@@ -306,7 +358,7 @@ export default function BulletinPage() {
                                                 whileInView={{ opacity: 1, scale: 1 }}
                                                 viewport={{ once: true }}
                                                 className="group cursor-pointer relative"
-                                                onClick={() => handleDownload(bulletin.pdfFile)}
+                                                onClick={() => handleView(bulletin)}
                                             >
                                                 <div className="relative aspect-[1/1.414] bg-slate-200 rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 mb-3">
                                                     {/* 관리자 액션 버튼 (호버 시 표시) */}
@@ -329,7 +381,13 @@ export default function BulletinPage() {
                                                             className="object-cover transition-transform duration-500 group-hover:scale-105"
                                                         />
                                                     )}
-                                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                                    <div
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            handleDownload(bulletin.pdfFile, `${bulletin.title}.pdf`)
+                                                        }}
+                                                        className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer"
+                                                    >
                                                         <Download className="text-white w-8 h-8 drop-shadow-md" />
                                                     </div>
                                                 </div>
@@ -346,7 +404,7 @@ export default function BulletinPage() {
                                             <div
                                                 key={bulletin._id}
                                                 className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl hover:border-sky-200 transition-colors group cursor-pointer relative"
-                                                onClick={() => handleDownload(bulletin.pdfFile)}
+                                                onClick={() => handleView(bulletin)}
                                             >
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-12 h-16 bg-slate-200 rounded overflow-hidden relative flex-shrink-0">
@@ -379,7 +437,15 @@ export default function BulletinPage() {
                                                             />
                                                         </div>
                                                     )}
-                                                    <Button variant="ghost" size="sm" className="text-slate-400 hover:text-sky-600">
+                                                    <Button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            handleDownload(bulletin.pdfFile, `${bulletin.title}.pdf`)
+                                                        }}
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="text-slate-400 hover:text-sky-600"
+                                                    >
                                                         <Download className="w-4 h-4" />
                                                     </Button>
                                                 </div>
@@ -437,6 +503,16 @@ export default function BulletinPage() {
                     setIsUploadModalOpen(false)
                 }}
                 initialData={editingBulletin}
+            />
+
+            <BulletinViewModal
+                open={isViewModalOpen}
+                onOpenChange={setIsViewModalOpen}
+                bulletin={viewingBulletin}
+                onPrevious={handlePrevious}
+                onNext={handleNext}
+                hasPrevious={viewingBulletin ? bulletins.findIndex(b => b._id === viewingBulletin._id) > 0 : false}
+                hasNext={viewingBulletin ? bulletins.findIndex(b => b._id === viewingBulletin._id) < bulletins.length - 1 : false}
             />
         </PageLayout>
     )

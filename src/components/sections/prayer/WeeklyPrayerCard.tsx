@@ -52,15 +52,33 @@ export function WeeklyPrayerCard({
         documentTitle: title,
     })
 
-    const handleShare = () => {
-        if (navigator.share) {
-            navigator.share({
-                title: title,
-                url: window.location.href,
-            })
-        } else {
-            navigator.clipboard.writeText(window.location.href)
-            alert('링크가 복사되었습니다!')
+    const handleShare = async () => {
+        const shareData = {
+            title: title,
+            text: `${title} - 부다페스트한인선교교회 주간기도문`,
+            url: window.location.href,
+        }
+
+        try {
+            // Web Share API 지원 확인
+            if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                await navigator.share(shareData)
+            } else {
+                // 폴백: 클립보드에 복사
+                await navigator.clipboard.writeText(window.location.href)
+                alert('✅ 링크가 클립보드에 복사되었습니다!\n\n원하는 곳에 붙여넣기(Ctrl+V) 하세요.')
+            }
+        } catch (error) {
+            // 사용자가 공유 취소한 경우 무시
+            if ((error as Error).name !== 'AbortError') {
+                // 에러 발생 시 클립보드 복사로 폴백
+                try {
+                    await navigator.clipboard.writeText(window.location.href)
+                    alert('✅ 링크가 클립보드에 복사되었습니다!')
+                } catch (clipboardError) {
+                    alert('❌ 공유 기능을 사용할 수 없습니다.\n\n링크: ' + window.location.href)
+                }
+            }
         }
     }
 

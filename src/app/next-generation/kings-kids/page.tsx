@@ -49,10 +49,10 @@ const PROGRAMS = [
 ]
 
 const GALLERY_IMAGES = [
-    'https://images.unsplash.com/photo-1502086223501-681a6a300d15?q=80&w=1000&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?q=80&w=1000&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=1000&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=1000&auto=format&fit=crop',
+    '/images/next-generation/kingskids/Activity-1.jpg',
+    '/images/next-generation/kingskids/Activity-2.jpg',
+    '/images/next-generation/kingskids/Activity-3.jpg',
+    '/images/next-generation/kingskids/Activity-4.jpg',
 ]
 
 // ----------------------------------------------------------------------
@@ -104,7 +104,7 @@ export default function KingsKidsPage() {
                         <div className="relative">
                             <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
                                 <OptimizedImage
-                                    src="/images/next-generation/kingskids.jpg"
+                                    src="/images/next-generation/kingskids/kingskids.jpg"
                                     alt="Happy Kids"
                                     width={800}
                                     height={600}
@@ -163,54 +163,6 @@ export default function KingsKidsPage() {
                     </div>
                 </section>
 
-                {/* 3. Teachers Section */}
-                <section className="bg-slate-50 dark:bg-slate-800/50 rounded-3xl p-8 md:p-12 space-y-8">
-                    <div className="text-center space-y-4">
-                        <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
-                            사랑으로 섬기는 선생님들 👩‍🏫
-                        </h2>
-                        <p className="text-slate-600 dark:text-slate-400">
-                            아이 한 명 한 명을 소중히 여기며 기도로 가르칩니다.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {TEACHERS.map((teacher, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
-                            >
-                                <div className="relative aspect-square">
-                                    {teacher.image ? (
-                                        <OptimizedImage
-                                            src={teacher.image}
-                                            alt={teacher.name}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full bg-gradient-to-br from-yellow-100 to-orange-100 dark:from-yellow-900/40 dark:to-orange-900/40 flex items-center justify-center">
-                                            <span className="text-4xl font-bold text-orange-400 dark:text-orange-300">
-                                                {teacher.name.charAt(0)}
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="p-6 text-center">
-                                    <Badge variant="secondary" className="mb-3">{teacher.role}</Badge>
-                                    <h3 className="text-lg font-bold mb-2">{teacher.name}</h3>
-                                    <p className="text-sm text-slate-600 dark:text-slate-400 italic">
-                                        "{teacher.message}"
-                                    </p>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </section>
-
                 {/* 4. Gallery Preview */}
                 <section className="space-y-8">
                     <div className="flex items-center justify-between">
@@ -242,21 +194,32 @@ export default function KingsKidsPage() {
                 </section>
 
                 {/* 5. Contact / Join CTA */}
-                <section className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-3xl p-8 md:p-12 text-center text-white shadow-lg">
+                <motion.section
+                    animate={{
+                        backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                        scale: [1, 1.01, 1]
+                    }}
+                    transition={{
+                        backgroundPosition: { duration: 8, repeat: Infinity, ease: "linear" },
+                        scale: { duration: 6, repeat: Infinity }
+                    }}
+                    style={{ backgroundSize: '200% 200%' }}
+                    className="bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400 rounded-3xl p-8 md:p-12 text-center text-white shadow-lg"
+                >
                     <h2 className="text-3xl font-bold mb-4">우리 아이도 함께하고 싶나요?</h2>
                     <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-                        킹스키즈는 언제나 열려있습니다. 주일 오전 11시, 교육관 2층에서 만나요!<br />
+                        킹스키즈는 언제나 열려있습니다. 주일 오후 3시, 샬롬성전에서 만나요!<br />
                         궁금한 점이 있으시면 언제든 문의해주세요.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Button size="lg" className="bg-white text-orange-600 hover:bg-slate-100 border-none font-bold">
+                        <Button size="lg" className="bg-white text-orange-600 hover:bg-slate-100 border-none font-bold shadow-lg">
                             등록 문의하기
                         </Button>
-                        <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20">
+                        <Button size="lg" className="bg-white border-2 border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white font-bold shadow-lg transition-all duration-300">
                             오시는 길 안내
                         </Button>
                     </div>
-                </section>
+                </motion.section>
 
             </div>
         </PageLayout>

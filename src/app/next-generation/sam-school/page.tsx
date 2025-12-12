@@ -114,14 +114,14 @@ export default function SamSchoolPage() {
                                     <Clock className="w-5 h-5 text-teal-400" />
                                     <div>
                                         <p className="text-xs text-slate-400">예배 시간</p>
-                                        <p className="font-bold">주일 오전 11:00</p>
+                                        <p className="font-bold">주일 오후 3:00</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-5 py-3 rounded-xl border border-white/10">
                                     <MapPin className="w-5 h-5 text-teal-400" />
                                     <div>
                                         <p className="text-xs text-slate-400">장소</p>
-                                        <p className="font-bold">교육관 3층 샘스쿨실</p>
+                                        <p className="font-bold">본 예배당</p>
                                     </div>
                                 </div>
                             </div>
@@ -212,38 +212,6 @@ export default function SamSchoolPage() {
                                     />
                                 </div>
                             </motion.div>
-                        ))}
-                    </div>
-                </section>
-
-                {/* 4. Staff Introduction */}
-                <section className="bg-slate-50 dark:bg-slate-800/50 rounded-3xl p-8 md:p-12 space-y-8">
-                    <div className="text-center space-y-4">
-                        <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
-                            섬기는 분들
-                        </h2>
-                        <p className="text-slate-600 dark:text-slate-400">
-                            청소년들을 사랑으로 품고 기도하는 선생님들입니다.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {STAFF.map((person, index) => (
-                            <div key={index} className="flex flex-col items-center text-center group">
-                                <div className="relative w-40 h-40 rounded-full overflow-hidden mb-4 border-4 border-white dark:border-slate-700 shadow-lg group-hover:border-teal-400 transition-colors duration-300">
-                                    <OptimizedImage
-                                        src={person.image}
-                                        alt={person.name}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">{person.name}</h3>
-                                <span className="text-sm text-teal-600 dark:text-teal-400 font-medium mb-2">{person.role}</span>
-                                <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs">
-                                    "{person.message}"
-                                </p>
-                            </div>
                         ))}
                     </div>
                 </section>

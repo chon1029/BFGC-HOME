@@ -53,7 +53,7 @@ export default function DailyBreadListContainer() {
     })
 
     // 관리자 여부 확인 (임시)
-    const isAdmin = session?.user?.email === 'admin@bfgc.org'
+    const isAdmin = session?.user?.email === 'chon1029@gmail.com'
 
     return (
         <div className="space-y-8">

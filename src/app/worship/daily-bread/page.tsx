@@ -27,7 +27,7 @@ export default function DailyBreadPage() {
     const [currentPage, setCurrentPage] = useState(1)
 
     // 관리자 여부 확인
-    const isAdmin = session?.user?.email === 'admin@bfgc.org'
+    const isAdmin = session?.user?.email === 'chon1029@gmail.com'
 
     const filteredBreads = MOCK_DAILY_BREADS.filter(item => {
         const matchesBook = selectedBook ? item.book === selectedBook : true

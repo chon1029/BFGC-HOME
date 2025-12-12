@@ -71,7 +71,7 @@ export default function SermonListContainer() {
         : MOCK_SERMONS.filter(s => s.category === filter)
 
     // 관리자 여부 확인
-    const isAdmin = session?.user?.email === 'admin@bfgc.org'
+    const isAdmin = session?.user?.email === 'chon1029@gmail.com'
 
     const handleCreate = () => {
         setEditingSermon(null)

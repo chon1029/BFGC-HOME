@@ -13,9 +13,10 @@ import { Save, Eye, Calendar, BookOpen } from 'lucide-react'
 import { format, addDays } from 'date-fns'
 import { ko } from 'date-fns/locale'
 
-const DAYS_OF_WEEK = ['일', '월', '화', '수', '목', '금', '토']
+const DAYS_OF_WEEK = ['월', '화', '수', '목', '금', '토', '일']
 
 interface DailyPrayer {
+    _key?: string
     date: string
     dayOfWeek: string
     theme: string
@@ -51,6 +52,7 @@ export function WeeklyPrayerModal({ open, onOpenChange }: WeeklyPrayerModalProps
         for (let i = 0; i < 7; i++) {
             const currentDate = addDays(start, i)
             prayers.push({
+                _key: `day-${i}-${Date.now()}`, // 고유 키 추가
                 date: format(currentDate, 'yyyy-MM-dd'),
                 dayOfWeek: DAYS_OF_WEEK[i],
                 theme: '',
@@ -156,7 +158,7 @@ export function WeeklyPrayerModal({ open, onOpenChange }: WeeklyPrayerModalProps
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <Label htmlFor="weekStartDate">주간 시작일 (일요일) *</Label>
+                                        <Label htmlFor="weekStartDate">주간 시작일 (월요일) *</Label>
                                         <Input
                                             id="weekStartDate"
                                             type="date"
@@ -166,7 +168,7 @@ export function WeeklyPrayerModal({ open, onOpenChange }: WeeklyPrayerModalProps
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="weekEndDate">주간 종료일 (토요일)</Label>
+                                        <Label htmlFor="weekEndDate">주간 종료일 (주일)</Label>
                                         <Input
                                             id="weekEndDate"
                                             type="date"
