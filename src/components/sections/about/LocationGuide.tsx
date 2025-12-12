@@ -85,7 +85,7 @@ export default function LocationGuide() {
             찾아오시는 방법
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-sky-400 to-purple-500 bg-clip-text text-transparent">사진으로</span> 쉽게 찾아오세요
+            <span className="bg-gradient-to-r from-sky-400 to-purple-500 bg-clip-text text-transparent">사진을 보시며</span> 오시면 쉽습니다
           </h2>
           <p className="text-muted-foreground">
             6단계로 간단하게 교회까지 오실 수 있습니다

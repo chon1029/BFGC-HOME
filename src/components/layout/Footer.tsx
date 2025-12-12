@@ -46,16 +46,16 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-bold text-white mb-6">빠른 링크</h4>
             <nav className="grid grid-cols-2 gap-3">
-              <Link href="/worship/service" className="text-sm hover:text-sky-400 transition-colors">
+              <Link href="/guide/schedule" className="text-sm hover:text-sky-400 transition-colors">
                 예배 안내
               </Link>
-              <Link href="/about/vision" className="text-sm hover:text-sky-400 transition-colors">
+              <Link href="/guide/vision" className="text-sm hover:text-sky-400 transition-colors">
                 교회 소개
               </Link>
-              <Link href="/about/newcomer" className="text-sm hover:text-sky-400 transition-colors">
+              <Link href="/guide/newcomer" className="text-sm hover:text-sky-400 transition-colors">
                 새가족 등록
               </Link>
-              <Link href="/about/location" className="text-sm hover:text-sky-400 transition-colors">
+              <Link href="/guide/location" className="text-sm hover:text-sky-400 transition-colors">
                 오시는 길
               </Link>
               <Link href="/worship/sermons" className="text-sm hover:text-sky-400 transition-colors">
@@ -67,7 +67,7 @@ export default function Footer() {
               <Link href="/life/prayer" className="text-sm hover:text-sky-400 transition-colors">
                 주간 기도문
               </Link>
-              <Link href="/partnership/contact" className="text-sm hover:text-sky-400 transition-colors">
+              <Link href="/contact" className="text-sm hover:text-sky-400 transition-colors">
                 문의하기
               </Link>
             </nav>

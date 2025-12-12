@@ -9,6 +9,32 @@ const client = createClient({
     useCdn: false,
 })
 
+export async function GET() {
+    try {
+        const query = `*[_type == "bulletin"] | order(date desc) {
+            _id,
+            title,
+            date,
+            volume,
+            sermonTitle,
+            preacher,
+            scripture,
+            "thumbnail": thumbnail.asset->url,
+            "pdfFile": pdfFile.asset->url
+        }`
+
+        const bulletins = await client.fetch(query)
+
+        return NextResponse.json(bulletins)
+    } catch (error) {
+        console.error('Bulletin fetch error:', error)
+        return NextResponse.json(
+            { message: 'Failed to fetch bulletins', error: String(error) },
+            { status: 500 }
+        )
+    }
+}
+
 export async function POST(request: Request) {
     try {
         const formData = await request.formData()

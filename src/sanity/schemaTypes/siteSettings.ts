@@ -10,7 +10,7 @@ export default defineType({
     type: 'document',
     icon: Settings,
     // 싱글톤 패턴 - 하나의 문서만 존재
-    __experimental_singleton: true,
+    // __experimental_singleton: true,
     fields: [
         // 교회 기본 정보 그룹
         defineField({

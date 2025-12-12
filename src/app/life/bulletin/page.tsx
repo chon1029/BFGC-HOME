@@ -10,9 +10,10 @@ import { Download, Calendar, Bell, FileText, ChevronRight, Pin, Clock, MapPin, Z
 import { OptimizedImage } from '@/components/common/OptimizedImage'
 import { BulletinUploadModal } from '@/components/sections/bulletin/BulletinUploadModal'
 import BulletinActionButtons from '@/components/sections/bulletin/BulletinActionButtons'
-import { MOCK_BULLETINS } from '@/lib/mock/bulletin-data'
+
 import { Bulletin } from '@/types/bulletin'
 import { cn } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
 
 const NOTICES = [
     {
@@ -60,14 +61,27 @@ export default function BulletinPage() {
     const [loading, setLoading] = useState(true)
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
+    const [editingBulletin, setEditingBulletin] = useState<Bulletin | null>(null)
 
     // 관리자 여부 확인
     const isAdmin = session?.user?.email === 'admin@bfgc.org'
 
+    const fetchBulletins = async () => {
+        try {
+            setLoading(true)
+            const response = await fetch('/api/bulletin')
+            if (!response.ok) throw new Error('Failed to fetch bulletins')
+            const data = await response.json()
+            setBulletins(data)
+        } catch (error) {
+            console.error('Error fetching bulletins:', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     useEffect(() => {
-        // Mock Data 로드
-        setBulletins(MOCK_BULLETINS)
-        setLoading(false)
+        fetchBulletins()
     }, [])
 
     const latestBulletin = bulletins[0]
@@ -81,13 +95,40 @@ export default function BulletinPage() {
 
     // 관리자 액션 핸들러
     const handleEdit = (id: string) => {
-        // TODO: Sanity 수정 API 호출
-        alert(`주보(ID: ${id})를 수정합니다. (Mock)`)
+        const bulletinToEdit = bulletins.find(b => b._id === id)
+        if (bulletinToEdit) {
+            setEditingBulletin(bulletinToEdit)
+            setIsUploadModalOpen(true)
+        }
     }
 
-    const handleDelete = (id: string) => {
-        // TODO: Sanity 삭제 API 호출
-        alert(`주보(ID: ${id})가 삭제되었습니다. (Mock)`)
+    const { toast } = useToast()
+
+    // ...
+
+    const handleDelete = async (id: string) => {
+        try {
+            const response = await fetch(`/api/bulletin/${id}`, {
+                method: 'DELETE',
+            })
+
+            if (response.ok) {
+                toast({
+                    title: "삭제 완료",
+                    description: "주보가 성공적으로 삭제되었습니다.",
+                })
+                fetchBulletins() // 목록 새로고침
+            } else {
+                throw new Error('Failed to delete')
+            }
+        } catch (error) {
+            console.error('Delete error:', error)
+            toast({
+                variant: "destructive",
+                title: "삭제 실패",
+                description: "삭제 중 오류가 발생했습니다.",
+            })
+        }
     }
 
     return (
@@ -101,14 +142,14 @@ export default function BulletinPage() {
         >
             <div className="space-y-12">
 
-                {/* 1. Hero Section (Latest Bulletin) */}
+                {/* 1. 히어로 섹션 (최신 주보) */}
                 {latestBulletin ? (
                     <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl">
                         <div className="absolute top-0 right-0 w-96 h-96 bg-sky-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
                         <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
 
                         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 p-8 md:p-12 items-center">
-                            {/* Left: Bulletin Info */}
+                            {/* 좌측: 주보 정보 */}
                             <div className="lg:col-span-7 space-y-6">
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30 text-sm font-medium">
                                     <Calendar className="w-4 h-4" />
@@ -146,7 +187,7 @@ export default function BulletinPage() {
                                 </div>
                             </div>
 
-                            {/* Right: Bulletin Thumbnail */}
+                            {/* 우측: 주보 썸네일 */}
                             <div className="lg:col-span-5 flex justify-center lg:justify-end">
                                 <motion.div
                                     initial={{ opacity: 0, y: 20, rotate: 5 }}
@@ -194,10 +235,10 @@ export default function BulletinPage() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-                    {/* 2. Notices & Past Bulletins */}
+                    {/* 2. 공지사항 및 지난 주보 */}
                     <div className="lg:col-span-8 space-y-12">
 
-                        {/* Notices */}
+                        {/* 공지사항 */}
                         <div className="space-y-6">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-2xl font-bold flex items-center gap-2">
@@ -222,7 +263,7 @@ export default function BulletinPage() {
                             </div>
                         </div>
 
-                        {/* Past Bulletins Archive */}
+                        {/* 지난 주보 아카이브 */}
                         <div className="space-y-6">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-2xl font-bold flex items-center gap-2">
@@ -245,7 +286,10 @@ export default function BulletinPage() {
                                         </button>
                                     </div>
                                     {session && (
-                                        <Button onClick={() => setIsUploadModalOpen(true)} size="sm" className="bg-sky-600 hover:bg-sky-700 text-white gap-1">
+                                        <Button onClick={() => {
+                                            setEditingBulletin(null) // 등록 모드로 초기화
+                                            setIsUploadModalOpen(true)
+                                        }} size="sm" className="bg-sky-600 hover:bg-sky-700 text-white gap-1">
                                             <Plus className="w-4 h-4" /> 등록
                                         </Button>
                                     )}
@@ -262,6 +306,7 @@ export default function BulletinPage() {
                                                 whileInView={{ opacity: 1, scale: 1 }}
                                                 viewport={{ once: true }}
                                                 className="group cursor-pointer relative"
+                                                onClick={() => handleDownload(bulletin.pdfFile)}
                                             >
                                                 <div className="relative aspect-[1/1.414] bg-slate-200 rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 mb-3">
                                                     {/* 관리자 액션 버튼 (호버 시 표시) */}
@@ -298,7 +343,11 @@ export default function BulletinPage() {
                                 ) : (
                                     <div className="space-y-2">
                                         {pastBulletins.map((bulletin) => (
-                                            <div key={bulletin._id} className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl hover:border-sky-200 transition-colors group cursor-pointer relative">
+                                            <div
+                                                key={bulletin._id}
+                                                className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl hover:border-sky-200 transition-colors group cursor-pointer relative"
+                                                onClick={() => handleDownload(bulletin.pdfFile)}
+                                            >
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-12 h-16 bg-slate-200 rounded overflow-hidden relative flex-shrink-0">
                                                         {bulletin.thumbnail && (
@@ -344,7 +393,7 @@ export default function BulletinPage() {
                         </div>
                     </div>
 
-                    {/* 3. Upcoming Events (Sidebar) */}
+                    {/* 3. 주요 행사 (사이드바) */}
                     <div className="lg:col-span-4 space-y-6">
                         <h2 className="text-2xl font-bold flex items-center gap-2">
                             <Calendar className="w-6 h-6 text-purple-600" />
@@ -379,8 +428,15 @@ export default function BulletinPage() {
 
             <BulletinUploadModal
                 open={isUploadModalOpen}
-                onOpenChange={setIsUploadModalOpen}
-                onSuccess={() => { }} // Mock에서는 아무 동작 안 함
+                onOpenChange={(open) => {
+                    setIsUploadModalOpen(open)
+                    if (!open) setEditingBulletin(null) // 모달 닫힐 때 초기화
+                }}
+                onSuccess={() => {
+                    fetchBulletins()
+                    setIsUploadModalOpen(false)
+                }}
+                initialData={editingBulletin}
             />
         </PageLayout>
     )

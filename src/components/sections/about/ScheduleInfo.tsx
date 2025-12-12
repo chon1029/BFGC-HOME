@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 import { Container } from '@/components/common/Container'
 import { Badge } from '@/components/ui/badge'
 import { Car, Bus, MapPin, Info } from 'lucide-react'
@@ -57,7 +58,7 @@ const infos: InfoItem[] = [
       '지하철/버스 등 대중교통 이용 가능',
       '교회 근처 정류장에서 도보 5분',
       '자세한 경로는 오시는 길 페이지 참고',
-      '문의사항은 교회 사무실로 연락주세요',
+      '문의사항은 교회 대표연락처 연락주세요',
     ],
   },
   {
@@ -68,9 +69,9 @@ const infos: InfoItem[] = [
     color: 'from-purple-500 to-sky-400',
     details: [
       '본 예배당: 주일예배, 금요기도회, 여호수아청년부',
-      '살롬 성전: 청소 키즈',
-      '건물 입구에서 안내 표지판을 따라오세요',
-      '처음 오시는 분은 안내원에게 문의하세요',
+      '살롬 성전: 킹스키즈-교회학교',
+      '예배당에 입장하시면 안내를 받으실 수 있습니다',
+      '처음 오시는 분은 안내하시는 분들에게 문의해주세요',
     ],
   },
 ]
@@ -157,13 +158,16 @@ export default function ScheduleInfo() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="mt-12 text-center"
           >
-            <div className="inline-block bg-gradient-to-r from-purple-50 to-sky-50 rounded-xl p-6 border border-purple-200">
+            <Link
+              href="/contact"
+              className="inline-block bg-gradient-to-r from-purple-50 to-sky-50 rounded-xl p-6 border border-purple-200 hover:border-purple-400 hover:shadow-lg transition-all duration-300 cursor-pointer group"
+            >
               <p className="text-sm">
                 더 궁금하신 사항은
                 <br className="sm:hidden" />
-                <span className="font-semibold text-purple-600"> 교회 사무실</span>로 문의해 주세요
+                <span className="font-semibold text-purple-600 group-hover:text-purple-700 transition-colors"> 대표연락처 or Contact</span>로 문의해 주세요
               </p>
-            </div>
+            </Link>
           </motion.div>
         </div>
       </Container>

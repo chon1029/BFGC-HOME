@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Navigation } from 'swiper/modules';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react';
 import type { Swiper as SwiperType } from 'swiper';
 
@@ -82,16 +82,16 @@ export default function HeroSection() {
   };
 
   // 텍스트 애니메이션 설정
-  const textVariants = {
-    hidden: { opacity: 0, y: 30, filter: 'blur(10px)' },
+  const textVariants: Variants = {
+    hidden: { opacity: 0, y: 20, filter: 'blur(10px)' },
     visible: (custom: number) => ({
       opacity: 1,
       y: 0,
       filter: 'blur(0px)',
       transition: {
-        delay: custom * 0.1,
-        duration: 1.0,
-        ease: "easeInOut",
+        delay: custom * 0.05,
+        duration: 0.6,
+        ease: "easeOut",
       },
     }),
     exit: { opacity: 0, y: -20, filter: 'blur(5px)', transition: { duration: 0.3 } }

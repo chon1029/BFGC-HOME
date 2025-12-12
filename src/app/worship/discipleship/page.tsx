@@ -145,22 +145,22 @@ export default function DiscipleshipPage() {
                     <CardHeader className="text-center pb-4">
                         <CardTitle className="flex items-center justify-center gap-2 text-2xl">
                             <Calendar className="w-6 h-6 text-sky-600" />
-                            2025년 제자훈련 모집
+                            2026년 제자훈련 모집
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="text-center space-y-6">
                         <div className="grid md:grid-cols-3 gap-4 text-sm">
                             <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
                                 <p className="font-semibold text-slate-700 dark:text-slate-300 mb-1">모집 기간</p>
-                                <p className="text-slate-600 dark:text-slate-400">2025년 1월 1일 ~ 1월 31일</p>
+                                <p className="text-slate-600 dark:text-slate-400">2026년 1월 1일 ~ 1월 31일</p>
                             </div>
                             <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
                                 <p className="font-semibold text-slate-700 dark:text-slate-300 mb-1">훈련 시작</p>
-                                <p className="text-slate-600 dark:text-slate-400">2025년 2월 첫째 주</p>
+                                <p className="text-slate-600 dark:text-slate-400">2026년 2월 첫째 주</p>
                             </div>
                             <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
                                 <p className="font-semibold text-slate-700 dark:text-slate-300 mb-1">훈련 시간</p>
-                                <p className="text-slate-600 dark:text-slate-400">매주 수요일 오후 7시</p>
+                                <p className="text-slate-600 dark:text-slate-400">협의 후 결정</p>
                             </div>
                         </div>
 
@@ -174,7 +174,7 @@ export default function DiscipleshipPage() {
                                 신청하기
                             </Button>
                             <p className="text-xs text-slate-500 mt-3">
-                                문의: 담임목사 (전근일) | 이메일: pastor@bfgc.org
+                                문의: 담임목사 (전근일) | 이메일: bfgc1004@gmail.com
                             </p>
                         </div>
                     </CardContent>

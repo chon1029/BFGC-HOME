@@ -47,11 +47,9 @@ const sermonFormSchema = z.object({
     title: z.string().min(2, '제목을 입력해주세요.'),
     preacher: z.string().min(2, '설교자를 입력해주세요.'),
     scripture: z.string().min(2, '본문을 입력해주세요.'),
-    date: z.date({ required_error: '날짜를 선택해주세요.' }),
+    date: z.date(),
     videoUrl: z.string().url('올바른 URL을 입력해주세요.'),
-    category: z.enum(['sunday', 'friday', 'special'], {
-        required_error: '카테고리를 선택해주세요.',
-    }),
+    category: z.enum(['sunday', 'friday', 'special']),
     body: z.string().optional(), // 간단한 텍스트로 처리 (나중에 Rich Text로 확장 가능)
 })
 

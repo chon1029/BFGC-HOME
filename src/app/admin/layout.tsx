@@ -2,11 +2,21 @@ import { AdminSidebar, MobileSidebar } from '@/components/admin/AdminSidebar'
 import { UserNav } from '@/components/admin/UserNav' // We'll create this next
 import { Separator } from '@/components/ui/separator'
 
-export default function AdminLayout({
+import { getServerSession } from "next-auth"
+import { redirect } from "next/navigation"
+import { authOptions } from "@/lib/auth"
+
+export default async function AdminLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const session = await getServerSession(authOptions)
+
+    if (!session) {
+        redirect('/login')
+    }
+
     return (
         <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
             {/* Desktop Sidebar */}

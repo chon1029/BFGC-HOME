@@ -10,7 +10,7 @@ export default defineType({
     type: 'document',
     icon: Mail,
     // 싱글톤 패턴 - 하나의 문서만 존재
-    __experimental_singleton: true,
+    // __experimental_singleton: true,
     fields: [
         // 새가족 등록 알림
         defineField({

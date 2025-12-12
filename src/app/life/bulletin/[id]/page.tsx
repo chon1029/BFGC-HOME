@@ -79,7 +79,13 @@ export default function BulletinDetailPage() {
 
     if (!bulletin) {
         return (
-            <PageLayout>
+            <PageLayout
+                breadcrumbs={[
+                    { label: 'Home', href: '/' },
+                    { label: '교회생활', href: '/life' },
+                    { label: '주보', href: '/life/bulletin' },
+                ]}
+            >
                 <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
                     <h2 className="text-2xl font-bold">주보를 찾을 수 없습니다.</h2>
                     <Button onClick={() => router.back()}>돌아가기</Button>

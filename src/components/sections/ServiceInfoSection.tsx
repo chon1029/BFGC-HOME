@@ -9,31 +9,31 @@ const menuItems = [
     {
         label: '예배시간',
         image: '/images/herosection/church-info/schedule.png',
-        href: '/about/service-time',
+        href: '/guide/schedule',
         delay: 0.1
     },
     {
         label: '오시는길',
         image: '/images/herosection/church-info/map.png',
-        href: '/about/location',
+        href: '/guide/location',
         delay: 0.2
     },
     {
         label: '다음세대',
         image: '/images/herosection/church-info/next-gen.png',
-        href: '/ministry/next-gen',
+        href: '/next-generation',
         delay: 0.3
     },
     {
         label: '교회주보',
         image: '/images/herosection/church-info/bulletin.png',
-        href: '/news/bulletin',
+        href: '/life/bulletin',
         delay: 0.4
     },
     {
         label: '일용할양식',
         image: '/images/herosection/church-info/daily-bread.png',
-        href: '/word/daily',
+        href: '/worship/daily-bread',
         delay: 0.5
     }
 ]

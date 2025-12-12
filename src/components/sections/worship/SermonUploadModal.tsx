@@ -31,7 +31,7 @@ import {
 const sermonSchema = z.object({
     title: z.string().min(2, '제목을 입력해주세요.'),
     preacher: z.string().min(2, '설교자를 입력해주세요.'),
-    date: z.date({ required_error: '날짜를 선택해주세요.' }),
+    date: z.date(),
     scripture: z.string().min(2, '성경 본문을 입력해주세요.'),
     videoUrl: z.string().url('올바른 유튜브 링크를 입력해주세요.').includes('youtube', { message: '유튜브 링크만 가능합니다.' }),
     series: z.string().optional(),

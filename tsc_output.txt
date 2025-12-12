@@ -1,0 +1,77 @@
+src/components/admin/settings/EmailSettings.tsx(128,39): error TS2345: Argument of type '(prev: { enabled: boolean; recipients: never[]; subject: string; }) => { recipients: string[]; enabled: boolean; subject: string; }' is not assignable to parameter of type 'SetStateAction<{ enabled: boolean; recipients: never[]; subject: string; }>'.
+  Type '(prev: { enabled: boolean; recipients: never[]; subject: string; }) => { recipients: string[]; enabled: boolean; subject: string; }' is not assignable to type '(prevState: { enabled: boolean; recipients: never[]; subject: string; }) => { enabled: boolean; recipients: never[]; subject: string; }'.
+    Call signature return types '{ recipients: string[]; enabled: boolean; subject: string; }' and '{ enabled: boolean; recipients: never[]; subject: string; }' are incompatible.
+      The types of 'recipients' are incompatible between these types.
+        Type 'string[]' is not assignable to type 'never[]'.
+          Type 'string' is not assignable to type 'never'.
+src/components/admin/settings/EmailSettings.tsx(135,32): error TS2345: Argument of type '(prev: { senderName: string; senderEmail: string; replyTo: string; ccEmails: never[]; }) => { ccEmails: string[]; senderName: string; senderEmail: string; replyTo: string; }' is not assignable to parameter of type 'SetStateAction<{ senderName: string; senderEmail: string; replyTo: string; ccEmails: never[]; }>'.
+  Type '(prev: { senderName: string; senderEmail: string; replyTo: string; ccEmails: never[]; }) => { ccEmails: string[]; senderName: string; senderEmail: string; replyTo: string; }' is not assignable to type '(prevState: { senderName: string; senderEmail: string; replyTo: string; ccEmails: never[]; }) => { senderName: string; senderEmail: string; replyTo: string; ccEmails: never[]; }'.
+    Call signature return types '{ ccEmails: string[]; senderName: string; senderEmail: string; replyTo: string; }' and '{ senderName: string; senderEmail: string; replyTo: string; ccEmails: never[]; }' are incompatible.
+      The types of 'ccEmails' are incompatible between these types.
+        Type 'string[]' is not assignable to type 'never[]'.
+          Type 'string' is not assignable to type 'never'.
+src/components/sections/HeroSection.tsx(149,17): error TS2322: Type '{ hidden: { opacity: number; y: number; filter: string; }; visible: (custom: number) => { opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }; exit: { ...; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '(custom: number) => { opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '(custom: number) => { opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'TargetResolver'.
+        Type '{ opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'string | TargetAndTransition'.
+          Type '{ opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+            Type '{ opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+              Types of property 'transition' are incompatible.
+                Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+                  Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                    Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                      Types of property 'ease' are incompatible.
+                        Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+src/components/sections/HeroSection.tsx(160,17): error TS2322: Type '{ hidden: { opacity: number; y: number; filter: string; }; visible: (custom: number) => { opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }; exit: { ...; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '(custom: number) => { opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '(custom: number) => { opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'TargetResolver'.
+        Type '{ opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'string | TargetAndTransition'.
+          Type '{ opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+            Type '{ opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+              Types of property 'transition' are incompatible.
+                Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+                  Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                    Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                      Types of property 'ease' are incompatible.
+                        Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+src/components/sections/HeroSection.tsx(170,17): error TS2322: Type '{ hidden: { opacity: number; y: number; filter: string; }; visible: (custom: number) => { opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }; exit: { ...; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '(custom: number) => { opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '(custom: number) => { opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'TargetResolver'.
+        Type '{ opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'string | TargetAndTransition'.
+          Type '{ opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+            Type '{ opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+              Types of property 'transition' are incompatible.
+                Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+                  Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                    Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                      Types of property 'ease' are incompatible.
+                        Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+src/components/sections/HeroSection.tsx(179,27): error TS2322: Type '{ hidden: { opacity: number; y: number; filter: string; }; visible: (custom: number) => { opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }; exit: { ...; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '(custom: number) => { opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '(custom: number) => { opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'TargetResolver'.
+        Type '{ opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'string | TargetAndTransition'.
+          Type '{ opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+            Type '{ opacity: number; y: number; filter: string; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+              Types of property 'transition' are incompatible.
+                Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+                  Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                    Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                      Types of property 'ease' are incompatible.
+                        Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+src/components/sections/worship/SermonModal.tsx(50,20): error TS2353: Object literal may only specify known properties, and 'required_error' does not exist in type '{ error?: string | $ZodErrorMap<$ZodIssueInvalidType<unknown>> | undefined; message?: string | undefined; }'.
+src/components/sections/worship/SermonModal.tsx(52,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: readonly ["sunday", "friday", "special"], params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodEnum<...>', gave the following error.
+    Object literal may only specify known properties, and 'required_error' does not exist in type '{ error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; }'.
+  Overload 2 of 2, '(entries: Readonly<Record<string, EnumValue>>, params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodEnum<...>', gave the following error.
+    Argument of type 'string[]' is not assignable to parameter of type 'Readonly<Record<string, EnumValue>>'.
+      Index signature for type 'string' is missing in type 'string[]'.
+src/components/sections/worship/SermonUploadModal.tsx(34,20): error TS2353: Object literal may only specify known properties, and 'required_error' does not exist in type '{ error?: string | $ZodErrorMap<$ZodIssueInvalidType<unknown>> | undefined; message?: string | undefined; }'.
+src/lib/sanity/history.ts(4,24): error TS2307: Cannot find module '@/sanity/lib/client' or its corresponding type declarations.
+src/lib/sanity/settings.ts(4,24): error TS2307: Cannot find module '@/sanity/lib/client' or its corresponding type declarations.
+src/sanity/schemaTypes/emailSettings.ts(13,5): error TS2353: Object literal may only specify known properties, and '__experimental_singleton' does not exist in type '{ type: "document"; name: "emailSettings"; } & Omit<DocumentDefinition, "preview"> & { preview?: PreviewConfig<{ emailEnabled: string; lastUpdated: string; }, Record<"lastUpdated" | "emailEnabled", any>> | undefined; }'.
+src/sanity/schemaTypes/footerSettings.ts(13,5): error TS2353: Object literal may only specify known properties, and '__experimental_singleton' does not exist in type '{ type: "document"; name: "footerSettings"; } & Omit<DocumentDefinition, "preview"> & { preview?: PreviewConfig<{ churchName: string; lastUpdated: string; }, Record<"churchName" | "lastUpdated", any>> | undefined; }'.
+src/sanity/schemaTypes/siteSettings.ts(13,5): error TS2353: Object literal may only specify known properties, and '__experimental_singleton' does not exist in type '{ type: "document"; name: "siteSettings"; } & Omit<DocumentDefinition, "preview"> & { preview?: PreviewConfig<{ churchName: string; lastUpdated: string; }, Record<"churchName" | "lastUpdated", any>> | undefined; }'.

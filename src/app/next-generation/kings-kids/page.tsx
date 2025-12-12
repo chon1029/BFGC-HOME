@@ -14,22 +14,16 @@ import { OptimizedImage } from '@/components/common/OptimizedImage'
 
 const TEACHERS = [
     {
-        name: '김사랑 선생님',
-        role: '부장',
-        image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1000&auto=format&fit=crop',
+        name: '전주은 선생님',
+        role: '담당',
+        image: '', // 추후 업데이트 예정
         message: '아이들을 예수님의 사랑으로 섬기겠습니다.',
     },
     {
-        name: '이믿음 선생님',
+        name: '한진희 선생님',
         role: '교사',
-        image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000&auto=format&fit=crop',
+        image: '', // 추후 업데이트 예정
         message: '말씀 안에서 함께 자라가는 기쁨!',
-    },
-    {
-        name: '박소망 선생님',
-        role: '교사',
-        image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1000&auto=format&fit=crop',
-        message: '매일매일 기도로 아이들을 응원합니다.',
     },
 ]
 
@@ -99,21 +93,22 @@ export default function KingsKidsPage() {
                             <div className="flex flex-wrap gap-4">
                                 <div className="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2 rounded-full shadow-sm">
                                     <Clock className="w-5 h-5 text-orange-500" />
-                                    <span className="font-medium">주일 오전 11:00</span>
+                                    <span className="font-medium">주일 오후 3:00</span>
                                 </div>
                                 <div className="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2 rounded-full shadow-sm">
                                     <MapPin className="w-5 h-5 text-orange-500" />
-                                    <span className="font-medium">교육관 2층 킹스키즈실</span>
+                                    <span className="font-medium">샬롬성전</span>
                                 </div>
                             </div>
                         </div>
                         <div className="relative">
-                            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+                            <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
                                 <OptimizedImage
-                                    src="https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?q=80&w=1000&auto=format&fit=crop"
+                                    src="/images/next-generation/kingskids.jpg"
                                     alt="Happy Kids"
-                                    fill
-                                    className="object-cover"
+                                    width={800}
+                                    height={600}
+                                    className="w-full h-auto rounded-xl"
                                 />
                             </div>
                             {/* Decorative Elements */}
@@ -189,12 +184,20 @@ export default function KingsKidsPage() {
                                 className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
                             >
                                 <div className="relative aspect-square">
-                                    <OptimizedImage
-                                        src={teacher.image}
-                                        alt={teacher.name}
-                                        fill
-                                        className="object-cover"
-                                    />
+                                    {teacher.image ? (
+                                        <OptimizedImage
+                                            src={teacher.image}
+                                            alt={teacher.name}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-gradient-to-br from-yellow-100 to-orange-100 dark:from-yellow-900/40 dark:to-orange-900/40 flex items-center justify-center">
+                                            <span className="text-4xl font-bold text-orange-400 dark:text-orange-300">
+                                                {teacher.name.charAt(0)}
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="p-6 text-center">
                                     <Badge variant="secondary" className="mb-3">{teacher.role}</Badge>

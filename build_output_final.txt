@@ -1,0 +1,74 @@
+   ??Next.js 16.0.8 (Turbopack)
+   - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+ ??Compiled successfully in 18.0s
+   Running TypeScript ...
+   Collecting page data using 23 workers ...
+The default export of @sanity/image-url has been deprecated. Use the named export `createImageUrlBuilder` instead.
+   Generating static pages using 23 workers (0/43) ...
+   Generating static pages using 23 workers (10/43) 
+The default export of @sanity/image-url has been deprecated. Use the named export `createImageUrlBuilder` instead.
+   Generating static pages using 23 workers (21/43) 
+The default export of @sanity/image-url has been deprecated. Use the named export `createImageUrlBuilder` instead.
+   Generating static pages using 23 workers (32/43) 
+ ??Generating static pages using 23 workers (43/43) in 1543.5ms
+   Finalizing page optimization ...
+
+Route (app)
+????/
+????/_not-found
+??? /admin
+??? /admin/analytics
+??? /admin/posts
+??? /admin/settings
+??? /admin/spam
+??? /admin/users
+??? /admin/weekly-prayer
+??? /admin/weekly-prayer/create
+??? /admin/weekly-prayer/edit/[id]
+??? /api/auth/[...nextauth]
+??? /api/bulletin
+??? /api/bulletin/[id]
+??? /api/contact
+??? /api/discipleship/apply
+??? /api/gallery
+??? /api/weekly-prayer
+????/contact
+????/forgot-password
+????/guide
+????/guide/greeting
+????/guide/location
+????/guide/newcomer
+????/guide/schedule
+????/guide/vision
+????/life
+????/life/bulletin
+??? /life/bulletin/[id]
+????/life/gallery
+????/life/prayer
+????/life/prayer/[slug]
+????/life/prayer/2024-04-01
+????/life/prayer/2024-03-25
+????/login
+????/next-generation
+????/next-generation/joshua
+????/next-generation/kings-kids
+????/next-generation/sam-school
+????/robots.txt
+????/settings
+????/signup
+????/sitemap.xml
+??? /studio/[[...index]]
+????/worship
+????/worship/daily-bread
+??? /worship/daily-bread/[id]
+????/worship/discipleship
+????/worship/sermons
+??? /worship/sermons/[id]
+
+
+?? (Static)   prerendered as static content
+?? (SSG)      prerendered as static HTML (uses generateStaticParams)
+?  (Dynamic)  server-rendered on demand
+

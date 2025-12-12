@@ -368,7 +368,9 @@ function NotificationForm() {
 // Main Page Component
 // ----------------------------------------------------------------------
 
-export default function SettingsPage() {
+import { Suspense } from 'react'
+
+function SettingsContent() {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -382,44 +384,52 @@ export default function SettingsPage() {
     }
 
     return (
+        <div className="space-y-8 max-w-5xl mx-auto">
+            <div className="text-center space-y-2">
+                <h1 className="text-3xl font-bold tracking-tight">설정 (Settings)</h1>
+                <p className="text-muted-foreground">
+                    계정 및 사이트 환경설정을 관리합니다.
+                </p>
+            </div>
+
+            <Separator />
+
+            <Tabs value={currentTab} onValueChange={handleTabChange} className="space-y-8">
+                <div className="flex justify-center">
+                    <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
+                        <TabsTrigger value="general">일반 / 프로필</TabsTrigger>
+                        <TabsTrigger value="notifications">알림 설정</TabsTrigger>
+                        <TabsTrigger value="security">보안 / 계정</TabsTrigger>
+                    </TabsList>
+                </div>
+
+                <TabsContent value="general" className="space-y-4">
+                    <ProfileForm />
+                </TabsContent>
+
+                <TabsContent value="notifications" className="space-y-4">
+                    <NotificationForm />
+                </TabsContent>
+
+                <TabsContent value="security" className="space-y-4">
+                    <AccountForm />
+                </TabsContent>
+            </Tabs>
+        </div>
+    )
+}
+
+export default function SettingsPage() {
+    return (
         <PageLayout
             breadcrumbs={[
                 { label: 'Home', href: '/' },
                 { label: '설정', href: '/settings' },
             ]}
         >
-            <div className="space-y-8 max-w-5xl mx-auto">
-                <div className="text-center space-y-2">
-                    <h1 className="text-3xl font-bold tracking-tight">설정 (Settings)</h1>
-                    <p className="text-muted-foreground">
-                        계정 및 사이트 환경설정을 관리합니다.
-                    </p>
-                </div>
-
-                <Separator />
-
-                <Tabs value={currentTab} onValueChange={handleTabChange} className="space-y-8">
-                    <div className="flex justify-center">
-                        <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
-                            <TabsTrigger value="general">일반 / 프로필</TabsTrigger>
-                            <TabsTrigger value="notifications">알림 설정</TabsTrigger>
-                            <TabsTrigger value="security">보안 / 계정</TabsTrigger>
-                        </TabsList>
-                    </div>
-
-                    <TabsContent value="general" className="space-y-4">
-                        <ProfileForm />
-                    </TabsContent>
-
-                    <TabsContent value="notifications" className="space-y-4">
-                        <NotificationForm />
-                    </TabsContent>
-
-                    <TabsContent value="security" className="space-y-4">
-                        <AccountForm />
-                    </TabsContent>
-                </Tabs>
-            </div>
+            <Suspense fallback={<div>Loading...</div>}>
+                <SettingsContent />
+            </Suspense>
         </PageLayout>
     )
 }

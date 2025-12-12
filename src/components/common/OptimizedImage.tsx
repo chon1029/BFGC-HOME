@@ -15,6 +15,7 @@ interface OptimizedImageProps {
   objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down'  // 객체 맞춤 방식
   quality?: number               // 이미지 품질 (1-100)
   sizes?: string                 // 반응형 사이즈
+  style?: React.CSSProperties    // 인라인 스타일
 }
 
 /**
@@ -37,6 +38,7 @@ export function OptimizedImage({
   objectFit = 'cover',
   quality = 90,
   sizes,
+  style,
 }: OptimizedImageProps) {
   // fill 모드
   if (fill) {
@@ -56,6 +58,7 @@ export function OptimizedImage({
           objectFit === 'scale-down' && 'object-scale-down',
           className
         )}
+        style={style}
       />
     )
   }
@@ -76,6 +79,7 @@ export function OptimizedImage({
           objectFit === 'contain' && 'object-contain',
           className
         )}
+        style={style}
       />
     )
   }

@@ -1,7 +1,7 @@
 // src/lib/sanity/settings.ts
 // Sanity Settings CRUD 함수
 
-import { client } from '@/sanity/lib/client'
+import { client } from '@/lib/sanity'
 
 // ====================================
 // 사이트 설정 (siteSettings)
@@ -10,26 +10,26 @@ import { client } from '@/sanity/lib/client'
 export interface SiteSettings {
     _id?: string
     _type: 'siteSettings'
-    churchInfo: {
+    churchInfo?: {
         churchName: string
         churchDescription: string
         churchLogo?: any
     }
-    seoSettings: {
+    seoSettings?: {
         metaTitle: string
         metaDescription: string
         keywords: string[]
         ogImage?: any
         favicon?: any
     }
-    contactInfo: {
+    contactInfo?: {
         phone: string
         email: string
         address: string
         kakaoChannelUrl?: string
         googleMapUrl?: string
     }
-    worshipTime: {
+    worshipTime?: {
         sundayService: string
         fridayPrayer: string
         dawnPrayer?: string
@@ -151,33 +151,33 @@ export async function deletePopup(id: string): Promise<void> {
 export interface EmailSettings {
     _id?: string
     _type: 'emailSettings'
-    newcomerNotification: {
+    newcomerNotification?: {
         enabled: boolean
         recipients: string[]
         subject: string
     }
-    contactNotification: {
+    contactNotification?: {
         enabled: boolean
         recipients: string[]
         subject: string
     }
-    discipleshipNotification: {
+    discipleshipNotification?: {
         enabled: boolean
         recipients: string[]
         subject: string
     }
-    sermonNotification: {
+    sermonNotification?: {
         enabled: boolean
         recipients: string[]
         subject: string
     }
-    emailConfig: {
+    emailConfig?: {
         senderName: string
         senderEmail: string
         replyTo: string
         ccEmails: string[]
     }
-    notificationMethods: {
+    notificationMethods?: {
         emailEnabled: boolean
         kakaoEnabled: boolean
         smsEnabled: boolean

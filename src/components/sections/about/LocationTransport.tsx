@@ -44,7 +44,7 @@ const transports: TransportItem[] = [
     id: 3,
     type: '자가용 (개인 차량)',
     route: '내비게이션 입력',
-    station: '1073 Budapest, Ósvát u. 16',
+    station: '1073 Budapest, Ósvát u.16',
     description: '개인 차량으로 오실 경우 주소를 내비게이션에 입력하시면 됩니다. 교회 앞 공용 주차장을 이용하실 수 있습니다.',
     icon: Car,
     color: 'from-sky-500 to-purple-400',
@@ -98,7 +98,7 @@ export default function LocationTransport() {
                 <div className={`h-2 bg-gradient-to-r ${transport.color}`} />
 
                 {/* 카드 콘텐츠 */}
-                <div className="p-8 space-y-6">
+                <div className="p-4 space-y-6">
                   {/* 아이콘 */}
                   <div className="flex justify-center">
                     <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${transport.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>

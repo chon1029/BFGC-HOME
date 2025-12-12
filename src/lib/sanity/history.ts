@@ -1,7 +1,7 @@
 // src/lib/sanity/history.ts
 // Sanity 히스토리 & 복원 함수
 
-import { client } from '@/sanity/lib/client'
+import { client } from '@/lib/sanity'
 
 // 히스토리 버전 인터페이스
 export interface HistoryVersion {

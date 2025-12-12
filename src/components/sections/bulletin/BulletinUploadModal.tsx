@@ -1,23 +1,27 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Upload, Image as ImageIcon, FileText, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
+import { Bulletin } from '@/types/bulletin'
+import { useToast } from '@/hooks/use-toast'
 
 interface BulletinUploadModalProps {
     open: boolean
     onOpenChange: (open: boolean) => void
     onSuccess?: () => void
+    initialData?: Bulletin | null
 }
 
-export function BulletinUploadModal({ open, onOpenChange, onSuccess }: BulletinUploadModalProps) {
+export function BulletinUploadModal({ open, onOpenChange, onSuccess, initialData }: BulletinUploadModalProps) {
+    const { toast } = useToast()
     const [loading, setLoading] = useState(false)
 
-    // Form States
+    // 폼 상태
     const [title, setTitle] = useState('')
     const [date, setDate] = useState('')
     const [volume, setVolume] = useState('')
@@ -25,20 +29,49 @@ export function BulletinUploadModal({ open, onOpenChange, onSuccess }: BulletinU
     const [preacher, setPreacher] = useState('전근일 담임목사')
     const [scripture, setScripture] = useState('')
 
-    // File States
+    // 파일 상태
     const [thumbnail, setThumbnail] = useState<File | null>(null)
     const [pdfFile, setPdfFile] = useState<File | null>(null)
 
-    // Drag States
+    // 수정 모드: 기존 파일 URL (표시용)
+    const [existingThumbnail, setExistingThumbnail] = useState<string | null>(null)
+    const [existingPdf, setExistingPdf] = useState<string | null>(null)
+
+    // 드래그 상태
     const [isDraggingThumbnail, setIsDraggingThumbnail] = useState(false)
     const [isDraggingPdf, setIsDraggingPdf] = useState(false)
 
-    // Drag Handlers
+    // 초기 데이터 로드 (수정 모드)
+    useEffect(() => {
+        if (open && initialData) {
+            setTitle(initialData.title)
+            setDate(initialData.date)
+            setVolume(initialData.volume || '')
+            setSermonTitle(initialData.sermonTitle || '')
+            setPreacher(initialData.preacher || '전근일 담임목사')
+            setScripture(initialData.scripture || '')
+            setExistingThumbnail(initialData.thumbnail || null)
+            setExistingPdf(initialData.pdfFile || null)
+        } else if (open && !initialData) {
+            // 초기화 (등록 모드)
+            setTitle('')
+            setDate('')
+            setVolume('')
+            setSermonTitle('')
+            setPreacher('전근일 담임목사')
+            setScripture('')
+            setThumbnail(null)
+            setPdfFile(null)
+            setExistingThumbnail(null)
+            setExistingPdf(null)
+        }
+    }, [open, initialData])
+
+    // 드래그 핸들러
     const handleDragOver = (e: React.DragEvent, setDragging: (v: boolean) => void) => {
         e.preventDefault()
         setDragging(true)
     }
-
     const handleDragLeave = (e: React.DragEvent, setDragging: (v: boolean) => void) => {
         e.preventDefault()
         setDragging(false)
@@ -55,15 +88,35 @@ export function BulletinUploadModal({ open, onOpenChange, onSuccess }: BulletinU
             } else if (type === 'pdf' && file.type === 'application/pdf') {
                 setFile(file)
             } else {
-                alert(type === 'image' ? '이미지 파일만 가능합니다.' : 'PDF 파일만 가능합니다.')
+                toast({
+                    variant: "destructive",
+                    title: "파일 형식 오류",
+                    description: type === 'image' ? '이미지 파일만 가능합니다.' : 'PDF 파일만 가능합니다.',
+                })
             }
         }
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!title || !date || !thumbnail || !pdfFile) {
-            alert('필수 항목(제목, 날짜, 썸네일, PDF)을 모두 입력해주세요.')
+
+        // 유효성 검사
+        if (!title || !date) {
+            toast({
+                variant: "destructive",
+                title: "입력 오류",
+                description: "제목과 날짜는 필수입니다.",
+            })
+            return
+        }
+
+        // 등록 모드일 때는 파일 필수
+        if (!initialData && (!thumbnail || !pdfFile)) {
+            toast({
+                variant: "destructive",
+                title: "파일 누락",
+                description: "썸네일과 PDF 파일을 모두 등록해주세요.",
+            })
             return
         }
 
@@ -76,31 +129,34 @@ export function BulletinUploadModal({ open, onOpenChange, onSuccess }: BulletinU
             formData.append('sermonTitle', sermonTitle)
             formData.append('preacher', preacher)
             formData.append('scripture', scripture)
-            formData.append('thumbnail', thumbnail)
-            formData.append('pdfFile', pdfFile)
 
-            const response = await fetch('/api/bulletin', {
-                method: 'POST',
+            if (thumbnail) formData.append('thumbnail', thumbnail)
+            if (pdfFile) formData.append('pdfFile', pdfFile)
+
+            const url = initialData ? `/api/bulletin/${initialData._id}` : '/api/bulletin'
+            const method = initialData ? 'PATCH' : 'POST'
+
+            const response = await fetch(url, {
+                method: method,
                 body: formData,
             })
 
-            if (!response.ok) throw new Error('Upload failed')
+            if (!response.ok) throw new Error('Request failed')
 
-            alert('주보가 성공적으로 등록되었습니다!')
+            toast({
+                title: initialData ? "수정 완료" : "등록 완료",
+                description: initialData ? "주보가 성공적으로 수정되었습니다." : "주보가 성공적으로 등록되었습니다.",
+            })
             onSuccess?.()
             onOpenChange(false)
 
-            // Reset
-            setTitle('')
-            setDate('')
-            setVolume('')
-            setSermonTitle('')
-            setScripture('')
-            setThumbnail(null)
-            setPdfFile(null)
         } catch (error) {
             console.error('Error:', error)
-            alert('업로드 중 오류가 발생했습니다.')
+            toast({
+                variant: "destructive",
+                title: "오류 발생",
+                description: "작업 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+            })
         } finally {
             setLoading(false)
         }
@@ -117,7 +173,7 @@ export function BulletinUploadModal({ open, onOpenChange, onSuccess }: BulletinU
                         className="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
                     >
                         <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center sticky top-0 bg-white dark:bg-slate-900 z-10">
-                            <h2 className="text-xl font-bold">주보 등록하기</h2>
+                            <h2 className="text-xl font-bold">{initialData ? '주보 수정하기' : '주보 등록하기'}</h2>
                             <button onClick={() => onOpenChange(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
                                 <X className="w-5 h-5" />
                             </button>
@@ -134,8 +190,8 @@ export function BulletinUploadModal({ open, onOpenChange, onSuccess }: BulletinU
                                         value={date}
                                         onChange={(e) => {
                                             setDate(e.target.value)
-                                            // 날짜 선택 시 제목 자동 생성 (선택 사항)
-                                            if (!title) setTitle(`${e.target.value.split('-')[0]}년 ${parseInt(e.target.value.split('-')[1])}월 ${parseInt(e.target.value.split('-')[2])}일 주보`)
+                                            // 날짜 선택 시 제목 자동 생성 (등록 모드일 때만)
+                                            if (!initialData && !title) setTitle(`${e.target.value.split('-')[0]}년 ${parseInt(e.target.value.split('-')[1])}월 ${parseInt(e.target.value.split('-')[2])}일 주보`)
                                         }}
                                         required
                                     />
@@ -199,7 +255,7 @@ export function BulletinUploadModal({ open, onOpenChange, onSuccess }: BulletinU
 
                                 {/* 썸네일 */}
                                 <div className="space-y-2">
-                                    <Label>썸네일 이미지 (Drag & Drop) *</Label>
+                                    <Label>썸네일 이미지 {initialData ? '(변경 시에만 업로드)' : '(Drag & Drop) *'}</Label>
                                     <div
                                         onDragOver={(e) => handleDragOver(e, setIsDraggingThumbnail)}
                                         onDragLeave={(e) => handleDragLeave(e, setIsDraggingThumbnail)}
@@ -224,6 +280,13 @@ export function BulletinUploadModal({ open, onOpenChange, onSuccess }: BulletinU
                                                     클릭하여 변경
                                                 </div>
                                             </div>
+                                        ) : existingThumbnail ? (
+                                            <div className="relative w-full h-full">
+                                                <img src={existingThumbnail} alt="Existing Preview" className="w-full h-full object-contain opacity-80" />
+                                                <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity text-white text-sm">
+                                                    클릭하여 변경
+                                                </div>
+                                            </div>
                                         ) : (
                                             <>
                                                 <div className="p-3 bg-sky-100 dark:bg-sky-900/30 rounded-full">
@@ -237,7 +300,7 @@ export function BulletinUploadModal({ open, onOpenChange, onSuccess }: BulletinU
 
                                 {/* PDF 파일 */}
                                 <div className="space-y-2">
-                                    <Label>주보 PDF 파일 (Drag & Drop) *</Label>
+                                    <Label>주보 PDF 파일 {initialData ? '(변경 시에만 업로드)' : '(Drag & Drop) *'}</Label>
                                     <div
                                         onDragOver={(e) => handleDragOver(e, setIsDraggingPdf)}
                                         onDragLeave={(e) => handleDragLeave(e, setIsDraggingPdf)}
@@ -260,6 +323,11 @@ export function BulletinUploadModal({ open, onOpenChange, onSuccess }: BulletinU
                                                 <FileText className="w-8 h-8" />
                                                 <span>{pdfFile.name}</span>
                                             </div>
+                                        ) : existingPdf ? (
+                                            <div className="flex items-center gap-3 text-slate-600 font-medium">
+                                                <FileText className="w-8 h-8" />
+                                                <span>기존 PDF 파일 유지됨</span>
+                                            </div>
                                         ) : (
                                             <>
                                                 <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-full">
@@ -281,12 +349,12 @@ export function BulletinUploadModal({ open, onOpenChange, onSuccess }: BulletinU
                                     {loading ? (
                                         <>
                                             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                            업로드 중...
+                                            {initialData ? '수정 중...' : '업로드 중...'}
                                         </>
                                     ) : (
                                         <>
                                             <Upload className="w-4 h-4 mr-2" />
-                                            주보 등록
+                                            {initialData ? '주보 수정' : '주보 등록'}
                                         </>
                                     )}
                                 </Button>

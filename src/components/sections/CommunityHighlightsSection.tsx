@@ -59,9 +59,11 @@ export default function CommunityHighlightsSection() {
                         </p>
                     </div>
 
-                    <Button variant="ghost" className="group hidden md:flex hover:bg-gradient-to-r hover:from-sky-400 hover:to-purple-600 hover:text-white transition-all duration-300">
-                        소식 전체보기 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Button>
+                    <Link href="/life">
+                        <Button variant="ghost" className="group hidden md:flex hover:bg-gradient-to-r hover:from-sky-400 hover:to-purple-600 hover:text-white transition-all duration-300">
+                            소식 전체보기 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        </Button>
+                    </Link>
                 </motion.div>
 
                 <motion.div
@@ -176,9 +178,11 @@ export default function CommunityHighlightsSection() {
                 </motion.div>
 
                 <div className="mt-8 text-center md:hidden">
-                    <Button variant="outline" className="w-full hover:bg-gradient-to-r hover:from-sky-400 hover:to-purple-600 hover:text-white hover:border-transparent transition-all duration-300">
-                        소식 전체보기 <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                    <Link href="/life">
+                        <Button variant="outline" className="w-full hover:bg-gradient-to-r hover:from-sky-400 hover:to-purple-600 hover:text-white hover:border-transparent transition-all duration-300">
+                            소식 전체보기 <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                    </Link>
                 </div>
             </div>
 

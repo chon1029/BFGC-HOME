@@ -50,14 +50,23 @@ export default function EmailSettings() {
     })
 
     // 설교 업로드 알림
-    const [sermonNotification, setSermonNotification] = useState({
+    const [sermonNotification, setSermonNotification] = useState<{
+        enabled: boolean
+        recipients: string[]
+        subject: string
+    }>({
         enabled: false,
         recipients: [],
         subject: '[BFGC] 새로운 설교가 업로드되었습니다',
     })
 
     // 이메일 발송 설정
-    const [emailConfig, setEmailConfig] = useState({
+    const [emailConfig, setEmailConfig] = useState<{
+        senderName: string
+        senderEmail: string
+        replyTo: string
+        ccEmails: string[]
+    }>({
         senderName: '부다페스트한인선교교회',
         senderEmail: 'bfgc1004@gmail.com',
         replyTo: 'bfgc1004@gmail.com',
