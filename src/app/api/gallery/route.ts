@@ -11,6 +11,26 @@ const getClient = () => createClient({
     useCdn: false,
 })
 
+export async function GET() {
+    try {
+        const client = getClient()
+        const query = `*[_type == "gallery"] | order(date desc) {
+            _id,
+            title,
+            category,
+            date,
+            description,
+            "thumbnail": thumbnail.asset->url,
+            "images": images[].asset->url
+        }`
+        const galleries = await client.fetch(query)
+        return NextResponse.json(galleries)
+    } catch (error) {
+        console.error('Gallery fetch error:', error)
+        return NextResponse.json({ message: 'Failed to fetch' }, { status: 500 })
+    }
+}
+
 export async function POST(request: Request) {
     try {
         const formData = await request.formData()
