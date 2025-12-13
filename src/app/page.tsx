@@ -7,6 +7,7 @@ import CommunityHighlightsSection from '@/components/sections/CommunityHighlight
 import FeatureCardsSection from '@/components/sections/FeatureCardsSection'
 import ScrollToTop from '@/components/ui/ScrollToTop'
 
+// 메인 홈페이지 컴포넌트
 export default function Home() {
   return (
     <>

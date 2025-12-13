@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createClient } from 'next-sanity'
 
+export const dynamic = 'force-dynamic' // 캐싱 방지: 항상 최신 데이터 조회
+
 // 서버 사이드 Sanity 클라이언트 생성 함수
 const getClient = () => createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
