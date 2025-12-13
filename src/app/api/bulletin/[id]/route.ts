@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from 'next-sanity'
 
-const client = createClient({
+const getClient = () => createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
     dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
     apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01',
@@ -38,6 +38,7 @@ export async function PATCH(
 
         // 1. 썸네일 변경 시 업로드 및 레퍼런스 업데이트
         if (thumbnailFile && thumbnailFile.size > 0) {
+            const client = getClient()
             const thumbnailAsset = await client.assets.upload('image', thumbnailFile, {
                 filename: thumbnailFile.name,
             })
@@ -52,6 +53,7 @@ export async function PATCH(
 
         // 2. PDF 변경 시 업로드 및 레퍼런스 업데이트
         if (pdfFile && pdfFile.size > 0) {
+            const client = getClient()
             const pdfAsset = await client.assets.upload('file', pdfFile, {
                 filename: pdfFile.name,
             })
@@ -64,6 +66,7 @@ export async function PATCH(
             }
         }
 
+        const client = getClient()
         const result = await client.patch(id).set(updates).commit()
 
         return NextResponse.json({ message: 'Bulletin updated successfully', result }, { status: 200 })
@@ -87,6 +90,7 @@ export async function DELETE(
             return NextResponse.json({ message: 'ID is required' }, { status: 400 })
         }
 
+        const client = getClient()
         await client.delete(id)
 
         return NextResponse.json({ message: 'Bulletin deleted successfully' }, { status: 200 })
