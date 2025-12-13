@@ -60,5 +60,8 @@ export const authOptions: NextAuthOptions = {
     session: {
         strategy: "jwt"
     },
-    secret: process.env.NEXTAUTH_SECRET, // Vercel 배포 시 필수
+    secret: process.env.NEXTAUTH_SECRET,
+    // @ts-ignore
+    trustHost: true, // Vercel 배포 시 필수 (프록시 신뢰)
+    debug: true, // 디버깅을 위해 로그 활성화
 }
