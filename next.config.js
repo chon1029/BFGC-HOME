@@ -32,6 +32,13 @@ const nextConfig = {
   // 트레일링 슬래시 제거 (Vercel 호환성)
   trailingSlash: false,
 
+  // 환경 변수 강제 주입 (Vercel 설정 문제 해결용)
+  env: {
+    NEXTAUTH_URL: 'https://bfgc-home.vercel.app',
+    NEXT_PUBLIC_SANITY_PROJECT_ID: 'xmm3fjwr',
+    NEXT_PUBLIC_SANITY_DATASET: 'production',
+  },
+
   // 보안 헤더 설정
   async headers() {
     return [
