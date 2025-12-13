@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createClient } from 'next-sanity'
 
-// 서버 사이드 Sanity 클라이언트 (쓰기 권한 토큰 포함)
-const client = createClient({
+// 서버 사이드 Sanity 클라이언트 생성 함수
+const getClient = () => createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
     dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
     apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01',
@@ -25,6 +25,7 @@ export async function GET() {
             publishedAt
         }`
 
+        const client = getClient()
         const prayers = await client.fetch(query)
         return NextResponse.json(prayers, { status: 200 })
     } catch (error) {
@@ -68,6 +69,7 @@ export async function POST(request: Request) {
         }
 
         // 데이터 생성 요청
+        const client = getClient()
         const result = await client.create(doc)
 
         return NextResponse.json({ message: 'Success', result }, { status: 200 })

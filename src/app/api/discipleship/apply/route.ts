@@ -1,38 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
-import { client } from '@/lib/sanity'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { createClient } from 'next-sanity'
 
 export async function POST(request: NextRequest) {
-    try {
-        const body = await request.json()
-        const { name, phone, email, course, motivation } = body
+  try {
+    const body = await request.json()
+    const { name, phone, email, course, motivation } = body
 
-        // 1. Sanity에 저장
-        const application = await client.create({
-            _type: 'discipleshipApplication',
-            name,
-            phone,
-            email,
-            course,
-            motivation,
-            submittedAt: new Date().toISOString(),
-            status: 'pending',
-        })
+    // Sanity 클라이언트 생성 (핸들러 내부에서)
+    const client = createClient({
+      projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+      dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+      apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01',
+      token: process.env.SANITY_API_TOKEN,
+      useCdn: false,
+    })
 
-        // 2. 이메일 발송
-        const courseNames: Record<string, string> = {
-            foundation: '성장반 (12주)',
-            discipleship: '제자반 (24주)',
-            leadership: '사역자반 (36주)',
-        }
+    // 1. Sanity에 저장
+    const application = await client.create({
+      _type: 'discipleshipApplication',
+      name,
+      phone,
+      email,
+      course,
+      motivation,
+      submittedAt: new Date().toISOString(),
+      status: 'pending',
+    })
 
-        await resend.emails.send({
-            from: 'BFGC 제자훈련 <onboarding@resend.dev>', // TODO: 실제 도메인으로 변경
-            to: process.env.ADMIN_EMAIL || 'chon1029@gmail.com',
-            subject: `[제자훈련 신청] ${name}님 - ${courseNames[course]}`,
-            html: `
+    // 2. 이메일 발송
+    const courseNames: Record<string, string> = {
+      foundation: '성장반 (12주)',
+      discipleship: '제자반 (24주)',
+      leadership: '사역자반 (36주)',
+    }
+
+    // Resend 클라이언트 생성 (핸들러 내부에서)
+    const resend = new Resend(process.env.RESEND_API_KEY)
+
+    await resend.emails.send({
+      from: 'BFGC 제자훈련 <onboarding@resend.dev>', // TODO: 실제 도메인으로 변경
+      to: process.env.ADMIN_EMAIL || 'chon1029@gmail.com',
+      subject: `[제자훈련 신청] ${name}님 - ${courseNames[course]}`,
+      html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #0284c7;">제자훈련 신청이 접수되었습니다</h2>
           
@@ -54,19 +64,19 @@ export async function POST(request: NextRequest) {
           </p>
         </div>
       `,
-        })
+    })
 
-        return NextResponse.json({
-            success: true,
-            message: '신청이 완료되었습니다.',
-            applicationId: application._id,
-        })
+    return NextResponse.json({
+      success: true,
+      message: '신청이 완료되었습니다.',
+      applicationId: application._id,
+    })
 
-    } catch (error) {
-        console.error('Application submission error:', error)
-        return NextResponse.json(
-            { success: false, message: '신청 처리 중 오류가 발생했습니다.' },
-            { status: 500 }
-        )
-    }
+  } catch (error) {
+    console.error('Application submission error:', error)
+    return NextResponse.json(
+      { success: false, message: '신청 처리 중 오류가 발생했습니다.' },
+      { status: 500 }
+    )
+  }
 }

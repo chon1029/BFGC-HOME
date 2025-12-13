@@ -1,20 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function POST(request: NextRequest) {
-    try {
-        const body = await request.json()
-        const { name, email, phone, subject, message } = body
+  try {
+    const body = await request.json()
+    const { name, email, phone, subject, message } = body
 
-        // 이메일 발송
-        await resend.emails.send({
-            from: 'BFGC 문의 <onboarding@resend.dev>', // TODO: 실제 도메인으로 변경
-            to: process.env.ADMIN_EMAIL || 'chon1029@gmail.com',
-            replyTo: email,
-            subject: `[BFGC 문의] ${subject}`,
-            html: `
+    // Resend 클라이언트 생성 (핸들러 내부에서)
+    const resend = new Resend(process.env.RESEND_API_KEY)
+
+    // 이메일 발송
+    await resend.emails.send({
+      from: 'BFGC 문의 <onboarding@resend.dev>', // TODO: 실제 도메인으로 변경
+      to: process.env.ADMIN_EMAIL || 'chon1029@gmail.com',
+      replyTo: email,
+      subject: `[BFGC 문의] ${subject}`,
+      html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #0284c7;">새로운 문의가 접수되었습니다</h2>
           
@@ -46,18 +47,18 @@ export async function POST(request: NextRequest) {
           </p>
         </div>
       `,
-        })
+    })
 
-        return NextResponse.json({
-            success: true,
-            message: '문의가 전송되었습니다.',
-        })
+    return NextResponse.json({
+      success: true,
+      message: '문의가 전송되었습니다.',
+    })
 
-    } catch (error) {
-        console.error('Contact form submission error:', error)
-        return NextResponse.json(
-            { success: false, message: '문의 전송 중 오류가 발생했습니다.' },
-            { status: 500 }
-        )
-    }
+  } catch (error) {
+    console.error('Contact form submission error:', error)
+    return NextResponse.json(
+      { success: false, message: '문의 전송 중 오류가 발생했습니다.' },
+      { status: 500 }
+    )
+  }
 }
