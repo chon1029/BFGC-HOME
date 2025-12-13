@@ -60,9 +60,8 @@ export const authOptions: NextAuthOptions = {
     session: {
         strategy: "jwt"
     },
+    secret: process.env.NEXTAUTH_SECRET,
     // @ts-ignore
     trustHost: true,
     debug: true,
-    // Vercel 환경 변수 누락 시 비상용 키 사용 (500 에러 방지)
-    secret: process.env.NEXTAUTH_SECRET || 'bfgc-home-secret-key-2025-very-secure',
 }
