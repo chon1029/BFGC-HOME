@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -32,6 +32,11 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [loginStatus, setLoginStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,6 +45,10 @@ export default function LoginForm() {
       password: '',
     },
   })
+
+  if (!mounted) {
+    return null
+  }
 
   // Mock submit handler
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
