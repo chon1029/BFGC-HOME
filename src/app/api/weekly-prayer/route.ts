@@ -5,8 +5,8 @@ export const dynamic = 'force-dynamic' // 캐싱 방지: 항상 최신 데이터
 
 // 서버 사이드 Sanity 클라이언트 생성 함수
 const getClient = () => createClient({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'xmm3fjwr',
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
     apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01',
     token: process.env.SANITY_API_TOKEN, // .env에 설정된 쓰기 권한 토큰
     useCdn: false,
