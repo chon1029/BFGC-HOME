@@ -29,7 +29,8 @@ const nextConfig = {
   },
 
   // 트레일링 슬래시 (선택 사항, 유지해도 무방)
-  trailingSlash: true,
+  // 트레일링 슬래시 제거 (Vercel 호환성)
+  trailingSlash: false,
 
   // 보안 헤더 설정
   async headers() {
