@@ -32,12 +32,20 @@ export default function GalleryPage() {
     const isAdmin = session?.user?.email === 'chon1029@gmail.com'
 
     useEffect(() => {
-        // 실제 API 연동 전까지 빈 배열
-        setItems([])
-        setLoading(false)
+        const fetchGalleryItems = async () => {
+            try {
+                const response = await fetch('/api/gallery')
+                if (!response.ok) throw new Error('Failed to fetch gallery items')
+                const data = await response.json()
+                setItems(data)
+            } catch (error) {
+                console.error('Error fetching gallery items:', error)
+            } finally {
+                setLoading(false)
+            }
+        }
 
-        // TODO: 나중에 실제 API 호출
-        // fetchGalleryItems()
+        fetchGalleryItems()
     }, [])
 
     // 관리자 액션 핸들러
