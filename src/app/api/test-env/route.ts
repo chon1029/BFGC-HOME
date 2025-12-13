@@ -4,7 +4,8 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
     return NextResponse.json({
-        VERSION: '1.0 (Check After Redeploy)',
+        VERSION: '2.0 (Config Injection Test)',
+        IS_VERCEL: !!process.env.VERCEL,
         NEXTAUTH_URL: process.env.NEXTAUTH_URL || 'MISSING',
         NEXTAUTH_SECRET_EXISTS: !!process.env.NEXTAUTH_SECRET,
         GOOGLE_CLIENT_ID_EXISTS: !!process.env.GOOGLE_CLIENT_ID,
